@@ -18,7 +18,7 @@
 
   void my_printf(char *fstring, ...);
   void my_put_nbr(int nb);
-  void my_putchar(char c);
+  void my_putchar(int c);
   void my_putstr(char *str);
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);

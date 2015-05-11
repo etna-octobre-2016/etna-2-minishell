@@ -17,7 +17,7 @@ void my_printf(char *fstring, ...)
       {'b', binA},
       {'u', unsignedU},
       {'d', my_put_nbr},
-      // {'c', my_putchar},
+      {'c', my_putchar},
       {'i', my_put_nbr},
       {'s', my_putstr},
       {'x', hexaMin},
