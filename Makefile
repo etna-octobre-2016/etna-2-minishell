@@ -21,7 +21,7 @@ SRCDIR=./src
 # Files
 # -------------------------------------------------
 BIN=$(BINDIR)/$(NAME)
-SRC:=$(wildcard $(SRCDIR)/*.c)
+SRC:=$(wildcard $(SRCDIR)/*.c $(SRCDIR)/printf/*.c)
 
 ###################################################
 # TARGETS
