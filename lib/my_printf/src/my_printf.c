@@ -8,7 +8,7 @@
 ** Last update Wed Apr 23 13:12:30 2014 Steven Leclerc
 */
 #include <stdarg.h>
-#include "../headers/my_printf.h"
+#include "headers/my_printf.h"
 
 void my_printf(char *fstring, ...)
 {
@@ -34,17 +34,17 @@ void my_printf(char *fstring, ...)
     {
       if ( fstring[i] == '%' && checkChar(fstring[i+1], &i) == 1)
         {
-	  for (u = 0; letter[u].letter != '0'; u++)
+    for (u = 0; letter[u].letter != '0'; u++)
             {
-	      if (letter[u].letter == fstring[i+1])
-		{
-		  letter[u].function(va_arg(arguments, void*));
-		}
+        if (letter[u].letter == fstring[i+1])
+    {
+      letter[u].function(va_arg(arguments, void*));
+    }
             }
-	  i++;
+    i++;
         }
       else
-	my_putchar( fstring[i] );
+  my_putchar( fstring[i] );
     }
   va_end(arguments);
 }

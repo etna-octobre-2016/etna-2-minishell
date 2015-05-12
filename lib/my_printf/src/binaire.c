@@ -7,7 +7,7 @@
 ** Started on  Wed Apr 23 11:37:20 2014 Steven Leclerc
 ** Last update Wed Apr 23 13:25:09 2014 Steven Leclerc
 */
-#include "math.h"
+#include <math.h>
 void readBin(int tabEmpty[]);
 
 void binA(int input)
@@ -24,10 +24,10 @@ void binA(int input)
   for (i = 28; i >= 0; i--)
     {
       if (recup >= tabB[i])
-	{
-	  recup -= tabB[i];
-	  tabEmpty[i] = 1;
-	}
+  {
+    recup -= tabB[i];
+    tabEmpty[i] = 1;
+  }
     }
   readBin(tabEmpty);
 }
