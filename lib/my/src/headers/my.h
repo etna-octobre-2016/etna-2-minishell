@@ -12,6 +12,11 @@
 #define MY_HEADER_H
 
   ///////////////////////////////////////////////////////
+  // INCLUDES
+  ///////////////////////////////////////////////////////
+  #include <stddef.h>
+
+  ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
 
@@ -20,6 +25,9 @@
   void my_putchar(int c);
   void my_putstr(char *str);
   int my_strchar(char to_find, char* string);
+  size_t my_strlen(const char *);
+  int my_strcmp(char *s1, char *s2);
+  char *my_strstr(char *str, char *to_find);
 
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);
