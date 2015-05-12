@@ -1,3 +1,4 @@
+
 ###################################################
 # VARIABLES
 ###################################################
@@ -16,30 +17,61 @@ RM=rm -rf
 # Directories
 # -------------------------------------------------
 BINDIR=./bin
+LIBDIR=./lib
+OBJDIR=./obj
 SRCDIR=./src
 
 # Files
 # -------------------------------------------------
 BIN=$(BINDIR)/$(NAME)
-SRC:=$(wildcard $(SRCDIR)/*.c $(SRCDIR)/printf/*.c)
+SRC:=$(wildcard $(SRCDIR)/*.c)
+LIBMY_PRINTF=$(wildcard $(LIBDIR)/my_printf/*.c)
+
 
 ###################################################
-# TARGETS
+# COMMON TARGETS
 ###################################################
 
-all:clean $(NAME)
 
-# Compiling
+# Default target
 # -------------------------------------------------
-$(NAME):$(BINDIR)
-	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
+all: $(NAME)
+
 
 # Directories
 # -------------------------------------------------
 $(BINDIR):
-	mkdir -p $(BINDIR)
+  mkdir -p $(BINDIR)
 
-# Utils
+
+# Removes binary file
 # -------------------------------------------------
 clean:
-	$(RM) $(BIN)
+  $(RM) $(BIN)
+
+
+# Removes binary file & launches compiling
+# -------------------------------------------------
+re: clean all
+
+
+###################################################
+# MINISHELL TARGETS
+###################################################
+
+
+# Compiling
+# -------------------------------------------------
+$(NAME): $(BINDIR)
+  $(CC) $(CFLAGS) $(SRC) -o $(BIN)
+
+
+###################################################
+# LIBS TARGETS
+###################################################
+
+
+# my_printf lib compiling
+# -------------------------------------------------
+libmy_printf:
+  $(CC) $(CFLAGS) -shared -o $(LIBMY_PRINTF) $(OBJDIR)/*.o
