@@ -8,7 +8,7 @@
 ** Last update Wed Apr 23 13:12:30 2014 Steven Leclerc
 */
 #include <stdarg.h>
-#include "headers/my_printf.h"
+#include "headers/my.h"
 
 void my_printf(char *fstring, ...)
 {

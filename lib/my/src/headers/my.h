@@ -8,9 +8,8 @@
 ** Last update Thu May  1 10:06:34 2014 Steven Leclerc
 */
 
-#ifndef my_printf_Header_h
-#define my_printf_Header_h
-#include "string.h"
+#ifndef MY_HEADER_H
+#define MY_HEADER_H
 
   ///////////////////////////////////////////////////////
   // PROTOTYPES
