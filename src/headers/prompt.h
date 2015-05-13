@@ -11,7 +11,7 @@
   // PROTOTYPES
   ///////////////////////////////////////////////////////
   void  prompt_init();
-  void  prompt_read_cmd();
   void  prompt_show();
+  char  *prompt_read_cmd();
 
 #endif
