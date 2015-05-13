@@ -20,6 +20,8 @@
   void my_putchar(int c);
   void my_putstr(char *str);
   int my_strchar(char to_find, char* string);
+  char *my_strconcat(char *first_string, char *second_string);
+  int my_strlen(const char *str);
 
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);
