@@ -1,0 +1,10 @@
+#ifndef IRONSH_FUNCCALLER_H
+#define IRONSH_FUNCCALLER_H
+#define ENV_ARG_PATH "/bin/"
+
+///////////////////////////////////////////////////////
+// PROTOTYPES
+///////////////////////////////////////////////////////
+  int bin_caller(char* commandSplit[]);
+
+#endif

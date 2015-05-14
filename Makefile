@@ -9,7 +9,7 @@ PROJECT=ironsh
 LIBMY=libmy.so
 
 # Commands
-CC=gcc
+CC=gcc -g
 CFLAGS=-W -Wall -Werror -Wextra -std=c11
 DEBUGGER=gdb
 RM=rm -rf
