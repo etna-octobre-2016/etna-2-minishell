@@ -10,7 +10,7 @@ LIBMY=libmy.so
 
 # Commands
 CC=gcc
-CFLAGS=-W -Wall -Werror -Wextra -std=c11
+CFLAGS=-W -Wall -Werror -Wextra -std=c11 -g
 DEBUGGER=gdb
 RM=rm -rf
 
@@ -56,7 +56,7 @@ fclean: clean
 	$(RM) $(BINDIR) $(LIBMY_BINDIR)
 
 # Removes all & launches compiling
-re: fclean all
+re: fclean libmy all
 
 # Creates binaries directory
 $(BINDIR):
