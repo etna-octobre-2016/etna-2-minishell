@@ -43,7 +43,7 @@ char** split_cmd(char* commandLine)
     if (commandLine[i_one] == ' ')
       nb_args++;
   //FIRST MALLOC WITH NB_ARGS
-  commandSplit = malloc(nb_args * sizeof(char*));
+  commandSplit = malloc((nb_args + 1) * sizeof(char*));
   //CALL FUNCTION IN ORDER TO GET THE CHAR* SIZE OF DIFFERENT ARGS
   array_count = count_char(commandLine, nb_args);
   if (commandSplit == NULL)
@@ -71,6 +71,7 @@ char** split_cmd(char* commandLine)
     }
     commandSplit[i_two][i_three] = '\0';
   }
+  commandSplit[i_two + 1] = NULL;
   return (commandSplit);
 }
 
