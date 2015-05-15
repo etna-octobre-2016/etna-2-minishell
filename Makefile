@@ -56,7 +56,7 @@ fclean: clean
 	$(RM) $(BINDIR) $(LIBMY_BINDIR)
 
 # Removes all & launches compiling
-re: fclean all
+re: fclean libmy all
 
 # Creates binaries directory
 $(BINDIR):
