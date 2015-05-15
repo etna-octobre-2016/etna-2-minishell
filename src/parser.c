@@ -21,10 +21,18 @@ int parser(char* commandLine)
   }
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
+  //HANDLE SHE_BANG
+  if (my_strstr("./", commandSplit[0]) != 0)
+  {
+    commandLine = she_banging(commandLine);
+    //RE-SPLIT OF COMMANDLINE
+    free(commandSplit);
+    commandSplit = split_cmd(commandLine);
+  }
   //EXECUTE BIN WITH SPLITED COMMAND
   catch_error = bin_caller(commandSplit);
   if (catch_error == -1)
-    my_printf("Command not found.\n");
+    my_printf("%s : Command not found.\n", commandSplit[0]);
   //FREE MULTIDIM ARRAY
   free_array(commandSplit);
   //catch_error = bin_caller(commandSplit);
@@ -71,8 +79,8 @@ char** split_cmd(char* commandLine)
       i_two++;
       i_three = 0;
     }
-    commandSplit[i_two][i_three] = '\0';
   }
+  commandSplit[i_two][i_three] = '\0';
   commandSplit[i_two + 1] = NULL;
   return (commandSplit);
 }
