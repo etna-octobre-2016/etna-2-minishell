@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "../lib/my/src/headers/my.h"
+#include "headers/parser.h"
 #include "headers/prompt.h"
 
 void    prompt_init()
@@ -14,13 +15,7 @@ void    prompt_init()
     cmd = prompt_read_cmd();
     if (cmd != NULL)
     {
-      my_putstr("dans le IF\n");
-      my_printf("cmd = %s\n", cmd);
-    }
-    else
-    {
-      my_putstr("dans le ELSE\n");
-      my_printf("cmd = %s\n", cmd);
+      parser(cmd);
     }
   }
 }
