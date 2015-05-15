@@ -19,17 +19,17 @@ int    bin_caller(char* commandSplit[])
   if (pid == -1)
   {
     perror("fork()");
-    return (-1);
+    ret = -1;
   }
-  if (pid ==  0)
+  if (pid == 0)
   {
-    ret = execve(bin_to_exec, commandSplit, env);
-    return (ret); // ONLY HAPPENS WHEN EXECVE FAIL !
-   }
-  if (wait(&ret) >= 0 ) {
-    free(bin_to_exec);
-    return (ret);
+    ret = execve(bin_to_exec, commandSplit, env); // CHILD
+    free(bin_to_exec); // PARENT
+    return (ret); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
   }
-
+  if (wait(&ret) >= 0)
+  {
+    free(bin_to_exec);
+  }
   return (ret);
 }

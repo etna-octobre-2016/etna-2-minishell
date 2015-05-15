@@ -7,7 +7,7 @@ int parser(char* commandLine)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
   int i;
-  //int catch_error;
+  int catch_error;
   char specials_char[] = SPECIALS_CHAR;
   char** commandSplit;
 
@@ -22,7 +22,9 @@ int parser(char* commandLine)
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
   //EXECUTE BIN WITH SPLITED COMMAND
-  bin_caller(commandSplit);
+  catch_error = bin_caller(commandSplit);
+  if (catch_error == -1)
+    my_printf("Command not found.\n");
   //FREE MULTIDIM ARRAY
   free_array(commandSplit);
   //catch_error = bin_caller(commandSplit);
