@@ -13,7 +13,7 @@ void    prompt_init()
   {
     prompt_show();
     cmd = prompt_read_cmd();
-    if (cmd != NULL)
+    if (cmd != NULL && my_strlen(cmd) > 0)
     {
       parser(cmd);
     }
