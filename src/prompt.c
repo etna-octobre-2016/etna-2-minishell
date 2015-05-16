@@ -70,7 +70,9 @@ t_symbol_match    *prompt_find_first_special_symbol(char *cmd)
   {
     return (NULL);
   }
+  // @note: setting default values
   symbol->position = -1;
+  symbol->string = NULL;
   current_position = -1;
   for (i = 0; special_symbols[i] != NULL; i++)
   {
