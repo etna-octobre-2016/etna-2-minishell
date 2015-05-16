@@ -27,25 +27,30 @@ void              prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_ite
   }
 }
 
-void              prompt_init()
+bool              prompt_init()
 {
-  bool            is_running;
+  bool            is_success;
   char            *cmd;
   t_cmd_list      *cmd_current;
   t_cmd_list      *cmd_list;
 
-  is_running = true;
-  while (is_running)
+  is_success = true;
+  while (1)
   {
     prompt_show();
     cmd = prompt_cmd_read();
-    if (cmd != NULL && my_strlen(cmd) > 0)
+    if (cmd == NULL)
+    {
+      is_success = false;
+      break;
+    }
+    if (my_strlen(cmd) > 0)
     {
       cmd_list = prompt_cmd_split(cmd);
       if (cmd_list == NULL)
       {
-        my_putstr("Error: error during command list init\n");
-        abort();
+        is_success = false;
+        break;
       }
       cmd_current = cmd_list;
       while(cmd_current != NULL)
@@ -55,6 +60,7 @@ void              prompt_init()
       }
     }
   }
+  return (is_success);
 }
 
 void              prompt_show()

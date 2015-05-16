@@ -40,8 +40,8 @@
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
+  bool            prompt_init();
   void            prompt_cmd_list_add_item(t_cmd_list *, t_cmd_list *);
-  void            prompt_init();
   void            prompt_show();
 
   char            *prompt_cmd_read();

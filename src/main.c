@@ -1,8 +1,12 @@
+#include <stdlib.h>
 #include "headers/prompt.h"
 #include "headers/main.h"
 
 int main()
 {
-  prompt_init();
-  return (0);
+  if (prompt_init() == false)
+  {
+    return (EXIT_FAILURE);
+  }
+  return (EXIT_SUCCESS);
 }
