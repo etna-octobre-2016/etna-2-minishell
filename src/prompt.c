@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
 #include "headers/prompt.h"
@@ -21,6 +22,8 @@ void          prompt_init()
     // {
     //   parser(cmd);
     // }
+
+    // prompt_free_cmd_list(cmd_list);
   }
 }
 
@@ -34,10 +37,49 @@ char *prompt_read_cmd()
   return my_readline(PROMPT_BUFFER_SIZE);
 }
 
-t_cmd_list *prompt_split_cmd(char *cmd)
+t_cmd_list        *prompt_split_cmd(char *cmd)
 {
-  printf("%s\n", cmd);
+  t_cmd_list      *cmd_list;
+  t_symbol_match  *first_special_symbol;
 
+  cmd = cmd; //@note: remove this later
 
-  return (NULL);
+  cmd_list = malloc(sizeof(cmd_list));
+  if (cmd_list != NULL)
+  {
+    first_special_symbol = prompt_find_first_special_symbol(cmd);
+    if (first_special_symbol == NULL)
+    {
+      return (NULL);
+    }
+    printf("symb.string = %s\n", first_special_symbol->string);
+    printf("symb.position = %d\n", first_special_symbol->position);
+  }
+  return (cmd_list);
+}
+
+t_symbol_match    *prompt_find_first_special_symbol(char *cmd)
+{
+  char            *special_symbols[] = PROMPT_SPECIAL_SYMBOLS;
+  int             current_position;
+  int             i;
+  t_symbol_match  *symbol;
+
+  symbol = malloc(sizeof(symbol));
+  if (symbol == NULL)
+  {
+    return (NULL);
+  }
+  symbol->position = -1;
+  current_position = -1;
+  for (i = 0; special_symbols[i] != NULL; i++)
+  {
+    current_position = my_strpos(cmd, special_symbols[i]);
+    if (current_position > -1 && (symbol->position == -1 || current_position < symbol->position))
+    {
+      symbol->position = current_position;
+      symbol->string = special_symbols[i];
+    }
+  }
+  return (symbol);
 }
