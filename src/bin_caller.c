@@ -62,6 +62,8 @@ char* she_banging(char* commandLine)
     bin_name[i_two] = commandLine[i_one];
   }
   bin_name_cleaned = get_bin(bin_name, 0);
+  if (bin_name_cleaned == NULL)
+    return (NULL);
   //REWRITE COMMANDLINE
   commandLine = rewrite_command(commandLine, bin_name_cleaned);
   free(bin_name);
@@ -77,6 +79,8 @@ char* get_bin(char* bin_name, int opt)
   char* bin_name_cleaned;
 
   file = open(bin_name, O_RDONLY | O_NONBLOCK);
+  if (file == -1)
+    return (NULL);
   buffer = malloc(sizeof(char));
   if (opt != 0)
     bin_name_cleaned = malloc(sizeof(char) * (opt + 1));
