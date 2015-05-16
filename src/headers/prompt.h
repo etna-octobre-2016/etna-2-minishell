@@ -44,9 +44,9 @@
   void            prompt_init();
   void            prompt_show();
 
-  char            *prompt_read_cmd();
+  char            *prompt_cmd_read();
   t_cmd_list      *prompt_cmd_list_init();
-  t_cmd_list      *prompt_split_cmd(char *);
-  t_symbol_match  *prompt_find_first_special_symbol(char *);
+  t_cmd_list      *prompt_cmd_split(char *);
+  t_symbol_match  *prompt_cmd_find_first_symbol(char *);
 
 #endif

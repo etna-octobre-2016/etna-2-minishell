@@ -27,20 +27,6 @@ void              prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_ite
   }
 }
 
-t_cmd_list        *prompt_cmd_list_init()
-{
-  t_cmd_list      *cmd_list;
-
-  cmd_list = malloc(sizeof(cmd_list));
-  if (cmd_list != NULL)
-  {
-    cmd_list->cmd = NULL;
-    cmd_list->prev = NULL;
-    cmd_list->next = NULL;
-  }
-  return (cmd_list);
-}
-
 void              prompt_init()
 {
   bool            is_running;
@@ -52,10 +38,10 @@ void              prompt_init()
   while (is_running)
   {
     prompt_show();
-    cmd = prompt_read_cmd();
+    cmd = prompt_cmd_read();
     if (cmd != NULL && my_strlen(cmd) > 0)
     {
-      cmd_list = prompt_split_cmd(cmd);
+      cmd_list = prompt_cmd_split(cmd);
       if (cmd_list == NULL)
       {
         my_putstr("Error: error during command list init\n");
@@ -76,12 +62,26 @@ void              prompt_show()
   my_putstr(PROMPT_DEFAULT_STRING);
 }
 
-char              *prompt_read_cmd()
+char              *prompt_cmd_read()
 {
   return my_readline(PROMPT_BUFFER_SIZE);
 }
 
-t_cmd_list        *prompt_split_cmd(char *cmd)
+t_cmd_list        *prompt_cmd_list_init()
+{
+  t_cmd_list      *cmd_list;
+
+  cmd_list = malloc(sizeof(cmd_list));
+  if (cmd_list != NULL)
+  {
+    cmd_list->cmd = NULL;
+    cmd_list->prev = NULL;
+    cmd_list->next = NULL;
+  }
+  return (cmd_list);
+}
+
+t_cmd_list        *prompt_cmd_split(char *cmd)
 {
   bool            is_split_complete;
   char            *tmp;
@@ -98,7 +98,7 @@ t_cmd_list        *prompt_split_cmd(char *cmd)
   is_split_complete = false;
   while (!is_split_complete)
   {
-    first_special_symbol = prompt_find_first_special_symbol(tmp);
+    first_special_symbol = prompt_cmd_find_first_symbol(tmp);
     cmd_list_item = malloc(sizeof(cmd_list_item));
     if (first_special_symbol == NULL || cmd_list_item == NULL)
     {
@@ -131,7 +131,7 @@ t_cmd_list        *prompt_split_cmd(char *cmd)
   return (cmd_list);
 }
 
-t_symbol_match    *prompt_find_first_special_symbol(char *cmd)
+t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
 {
   char            *special_symbols[] = PROMPT_SPECIAL_SYMBOLS;
   int             current_position;
