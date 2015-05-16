@@ -16,7 +16,10 @@ int    bin_caller(char* commandSplit[])
   char* env[] = {NULL};
   char* bin_to_exec;
 
-  bin_to_exec = my_strconcat(ENV_ARG_PATH, commandSplit[0]);
+  if (my_strstr(commandSplit[0], "./") == 0)
+    bin_to_exec = my_strconcat(ENV_ARG_PATH, commandSplit[0]);
+  else
+    bin_to_exec = commandSplit[0];
   //FORK INIT
   pid = fork();
   //RETURN TEST OF FORK()
@@ -28,12 +31,11 @@ int    bin_caller(char* commandSplit[])
   if (pid == 0)
   {
     ret = execve(bin_to_exec, commandSplit, env); // CHILD
-    free(bin_to_exec); // PARENT
     return (ret); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
   }
   if (wait(&ret) >= 0)
   {
-    free(bin_to_exec);
+    ret = 0;
   }
   return (ret);
 }
