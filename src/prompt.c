@@ -1,59 +1,132 @@
 #include <stdlib.h>
+#include <signal.h>
 #include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
 #include "headers/prompt.h"
 
 #include <stdio.h>
 
-void          prompt_init()
+void              prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
 {
-  bool        is_running;
-  char        *cmd;
-  t_cmd_list  *cmd_list;
+  t_cmd_list      *tmp;
+
+  if (list->cmd == NULL)
+  {
+    list->cmd = new_item->cmd;
+  }
+  else
+  {
+    tmp = list;
+    while (tmp->next != NULL)
+    {
+      tmp = tmp->next;
+    }
+    new_item->prev = tmp;
+    new_item->next = NULL;
+    tmp->next = new_item;
+  }
+}
+
+t_cmd_list        *prompt_cmd_list_init()
+{
+  t_cmd_list      *cmd_list;
+
+  cmd_list = malloc(sizeof(cmd_list));
+  if (cmd_list != NULL)
+  {
+    cmd_list->cmd = NULL;
+    cmd_list->prev = NULL;
+    cmd_list->next = NULL;
+  }
+  return (cmd_list);
+}
+
+void              prompt_init()
+{
+  bool            is_running;
+  char            *cmd;
+  t_cmd_list      *cmd_current;
+  t_cmd_list      *cmd_list;
 
   is_running = true;
   while (is_running)
   {
     prompt_show();
     cmd = prompt_read_cmd();
-    cmd_list = prompt_split_cmd(cmd);
-    printf("addr cmd_list %p\n", cmd_list);
-    // if (cmd != NULL && my_strlen(cmd) > 0)
-    // {
-    //   parser(cmd);
-    // }
-
-    // prompt_free_cmd_list(cmd_list);
+    if (cmd != NULL && my_strlen(cmd) > 0)
+    {
+      cmd_list = prompt_split_cmd(cmd);
+      if (cmd_list == NULL)
+      {
+        my_putstr("Error: error during command list init\n");
+        abort();
+      }
+      cmd_current = cmd_list;
+      while(cmd_current != NULL)
+      {
+        printf("cmd_current->cmd = %s\n", cmd_current->cmd);
+        cmd_current = cmd_current->next;
+      }
+    }
   }
 }
 
-void prompt_show()
+void              prompt_show()
 {
   my_putstr(PROMPT_DEFAULT_STRING);
 }
 
-char *prompt_read_cmd()
+char              *prompt_read_cmd()
 {
   return my_readline(PROMPT_BUFFER_SIZE);
 }
 
 t_cmd_list        *prompt_split_cmd(char *cmd)
 {
+  bool            is_split_complete;
+  char            *tmp;
   t_cmd_list      *cmd_list;
+  t_cmd_list      *cmd_list_item;
   t_symbol_match  *first_special_symbol;
 
-  cmd = cmd; //@note: remove this later
-
-  cmd_list = malloc(sizeof(cmd_list));
-  if (cmd_list != NULL)
+  cmd_list = prompt_cmd_list_init();
+  if (cmd_list == NULL)
   {
-    first_special_symbol = prompt_find_first_special_symbol(cmd);
-    if (first_special_symbol == NULL)
+    return (NULL);
+  }
+  tmp = cmd;
+  is_split_complete = false;
+  while (!is_split_complete)
+  {
+    first_special_symbol = prompt_find_first_special_symbol(tmp);
+    cmd_list_item = malloc(sizeof(cmd_list_item));
+    if (first_special_symbol == NULL || cmd_list_item == NULL)
     {
       return (NULL);
     }
-    printf("symb.string = %s\n", first_special_symbol->string);
-    printf("symb.position = %d\n", first_special_symbol->position);
+    if (first_special_symbol->position == -1)
+    {
+      is_split_complete = true;
+      cmd_list_item->cmd = tmp;
+    }
+    else
+    {
+      cmd_list_item->cmd = malloc(sizeof(char) * (first_special_symbol->position + 1));
+      if (cmd_list_item->cmd == NULL)
+      {
+        return (NULL);
+      }
+      my_strncpy(cmd_list_item->cmd, tmp, first_special_symbol->position);
+      prompt_cmd_list_add_item(cmd_list, cmd_list_item);
+      cmd_list_item = malloc(sizeof(cmd_list_item));
+      if (cmd_list_item == NULL)
+      {
+        return (NULL);
+      }
+      cmd_list_item->cmd = first_special_symbol->string;
+      tmp = (tmp + first_special_symbol->position + my_strlen(first_special_symbol->string));
+    }
+    prompt_cmd_list_add_item(cmd_list, cmd_list_item);
   }
   return (cmd_list);
 }

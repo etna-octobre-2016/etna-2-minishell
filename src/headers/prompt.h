@@ -19,18 +19,14 @@
   ///////////////////////////////////////////////////////
   struct              s_cmd_list
   {
-    bool              is_pipe;
-    bool              is_redirect_in;
-    bool              is_redirect_out;
     char              *cmd;
     struct s_cmd_list *prev;
     struct s_cmd_list *next;
   };
-
-  struct s_symbol_match
+  struct              s_symbol_match
   {
-    char *string;
-    int  position;
+    char              *string;
+    int               position;
   };
 
 
@@ -44,9 +40,12 @@
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
+  void            prompt_cmd_list_add_item(t_cmd_list *, t_cmd_list *);
   void            prompt_init();
   void            prompt_show();
+
   char            *prompt_read_cmd();
+  t_cmd_list      *prompt_cmd_list_init();
   t_cmd_list      *prompt_split_cmd(char *);
   t_symbol_match  *prompt_find_first_special_symbol(char *);
 
