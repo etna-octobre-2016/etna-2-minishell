@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <signal.h>
 #include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
 #include "headers/prompt.h"
