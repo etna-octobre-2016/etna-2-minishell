@@ -54,7 +54,8 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        parser(cmd_current);
+        printf("is symbol = %d -- cmd = %s\n", cmd_current->is_symbol, cmd_current->cmd);
+        // parser(cmd_current);
         cmd_current = cmd_current->next;
       }
     }
@@ -77,12 +78,14 @@ t_cmd_list        *prompt_cmd_list_init()
   t_cmd_list      *cmd_list;
 
   cmd_list = malloc(sizeof(*cmd_list));
-  if (cmd_list != NULL)
+  if (cmd_list == NULL)
   {
-    cmd_list->cmd = NULL;
-    cmd_list->prev = NULL;
-    cmd_list->next = NULL;
+    return (NULL);
   }
+  cmd_list->is_symbol = false;
+  cmd_list->cmd = NULL;
+  cmd_list->prev = NULL;
+  cmd_list->next = NULL;
   return (cmd_list);
 }
 
@@ -112,6 +115,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
     if (first_special_symbol->position == -1)
     {
       is_split_complete = true;
+      cmd_list_item->is_symbol = false;
       cmd_list_item->cmd = tmp;
     }
     else
@@ -121,6 +125,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
       {
         return (NULL);
       }
+      cmd_list_item->is_symbol = false;
       my_strncpy(cmd_list_item->cmd, tmp, first_special_symbol->position);
       prompt_cmd_list_add_item(cmd_list, cmd_list_item);
       cmd_list_item = malloc(sizeof(*cmd_list_item));
@@ -128,6 +133,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
       {
         return (NULL);
       }
+      cmd_list_item->is_symbol = true;
       cmd_list_item->cmd = first_special_symbol->string;
       tmp = (tmp + first_special_symbol->position + my_strlen(first_special_symbol->string));
     }
