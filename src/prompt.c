@@ -76,7 +76,7 @@ t_cmd_list        *prompt_cmd_list_init()
 {
   t_cmd_list      *cmd_list;
 
-  cmd_list = malloc(sizeof(cmd_list));
+  cmd_list = malloc(sizeof(*cmd_list));
   if (cmd_list != NULL)
   {
     cmd_list->cmd = NULL;
@@ -104,7 +104,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
   while (!is_split_complete)
   {
     first_special_symbol = prompt_cmd_find_first_symbol(tmp);
-    cmd_list_item = malloc(sizeof(cmd_list_item));
+    cmd_list_item = malloc(sizeof(*cmd_list_item));
     if (first_special_symbol == NULL || cmd_list_item == NULL)
     {
       return (NULL);
@@ -123,7 +123,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
       }
       my_strncpy(cmd_list_item->cmd, tmp, first_special_symbol->position);
       prompt_cmd_list_add_item(cmd_list, cmd_list_item);
-      cmd_list_item = malloc(sizeof(cmd_list_item));
+      cmd_list_item = malloc(sizeof(*cmd_list_item));
       if (cmd_list_item == NULL)
       {
         return (NULL);
@@ -143,7 +143,7 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
   int             i;
   t_symbol_match  *symbol;
 
-  symbol = malloc(sizeof(symbol));
+  symbol = malloc(sizeof(*symbol));
   if (symbol == NULL)
   {
     return (NULL);
