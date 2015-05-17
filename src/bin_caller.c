@@ -5,12 +5,14 @@
 #include <stdio.h>
 #include <sys/wait.h>
 
-int    bin_caller(char* commandSplit[])
+int    bin_caller(char **commandSplit, t_cmd_list *command)
 {
   int ret;
   int pid;
   char* env[] = {NULL};
   char* bin_to_exec;
+
+  command = command; // remove
 
   bin_to_exec = my_strconcat(ENV_ARG_PATH, commandSplit[0]);
   //FORK INIT
