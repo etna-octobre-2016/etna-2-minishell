@@ -54,8 +54,10 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        printf("is symbol = %d -- cmd = %s\n", cmd_current->is_symbol, cmd_current->cmd);
-        // parser(cmd_current);
+        if (!cmd_current->is_symbol)
+        {
+          parser(cmd_current);
+        }
         cmd_current = cmd_current->next;
       }
     }
