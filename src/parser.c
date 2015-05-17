@@ -85,20 +85,18 @@ char** split_cmd(char* commandLine)
     if (commandLine[i_one] != ' ')
     {
       commandSplit[i_two][i_three] = commandLine[i_one];
-      my_printf(" indicateur ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
+      //my_printf(" indicateur ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_three++;
     }
     else if (commandLine[i_one + 1] != ' ')
     {
       commandSplit[i_two][i_three] = '\0';
-      my_printf(" indicateur2 ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_two++;
       i_three = 0;
     }
     else if (commandLine[i_one + 1] == ' ')
     {
       commandSplit[i_two][i_three] = '\0';
-      my_printf(" indicateur3 ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_two++;
       i_three = 0;
       for (; commandLine[i_one] == ' '; i_one++);
@@ -137,24 +135,6 @@ int* count_char(char* commandLine, int nb_args)
         }
   }
   return (array_count);
-}
-
-void clean_space(char** commandSplit)
-{
-  int i;
-
-  for (i = 0; commandSplit[i] != NULL; i++)
-  {
-    if (commandSplit[i][0] == '\0')
-    {
-      my_printf("coucou Orianne, je passe par la fonction clean_space\n");
-      // for (; commandSplit[i + 1] != NULL; i++)
-      // {
-      //   commandSplit[i] = commandSplit[i + 1];
-      // }
-      commandSplit[i] = NULL;
-    }
-  }
 }
 
 void free_array(char** commandSplit)
