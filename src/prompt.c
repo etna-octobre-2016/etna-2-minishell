@@ -54,7 +54,7 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        printf("cmd_current->cmd = %s\n", cmd_current->cmd);
+        parser(cmd_current);
         cmd_current = cmd_current->next;
       }
     }

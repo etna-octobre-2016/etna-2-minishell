@@ -1,24 +1,17 @@
 #include <stdlib.h>
+#include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
-#include "../lib/my/src/headers/my.h"
 
-int parser(char* commandLine)
+int parser(t_cmd_list *command)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
-  int i;
   int catch_error;
-  char specials_char[] = SPECIALS_CHAR;
+  char *commandLine;
   char** commandSplit;
 
-  for(i = 0; specials_char[i] != '0'; i++)
-  {
-    if (my_strchar(specials_char[i], commandLine) == 0)
-      {
-        my_printf("Argument found : %c\n", specials_char[i]);
-        return (0);
-      }
-  }
+  commandLine = command->cmd;
+
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
   //EXECUTE BIN WITH SPLITED COMMAND
