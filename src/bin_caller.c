@@ -25,13 +25,14 @@ int    bin_caller(char* commandSplit[])
   //RETURN TEST OF FORK()
   if (pid == -1)
   {
-    perror("fork()");
+    perror("forking");
     ret = -1;
   }
   if (pid == 0)
   {
-    ret = execve(bin_to_exec, commandSplit, env); // CHILD
-    return (ret); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
+    ret = execve(bin_to_exec, commandSplit, env);// CHILD
+    perror(commandSplit[0]); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
+    return (ret); // PARENT
   }
   if (wait(&ret) >= 0)
   {
@@ -110,6 +111,7 @@ char* get_bin(char* bin_name, int opt)
     read(file, buffer, 1);
   }
   free(buffer);
+  close(file);
   if (opt == 0)
     return (get_bin(bin_name, i_one));
   else

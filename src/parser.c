@@ -2,6 +2,8 @@
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
 #include <unistd.h>
+#include <errno.h>
+#include <stdio.h>
 #include "../lib/my/src/headers/my.h"
 
 int parser(char* commandLine)
@@ -22,17 +24,26 @@ int parser(char* commandLine)
   }
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
+  // CHANGE DIRECTORY
   if (my_strstr(commandSplit[0], "cd") != 0)
   {
-      catch_error = chdir(commandSplit[1]);
-      if (catch_error != 0)
-        my_printf("-bash: cd: %s: Aucun fichier ou dossier de ce type\n", commandSplit[1]);
+      if (commandSplit[1] != NULL)
+      {
+        catch_error = chdir(commandSplit[1]);
+      }
+      else
+      {
+        catch_error = -1;
+      }
+      if (catch_error == -1)
+      {
+        perror(commandSplit[0]);
+      }
       return (catch_error);
   }
   //EXECUTE BIN WITH SPLITED COMMAND
-  catch_error = bin_caller(commandSplit);
-  if (catch_error == -1)
-    my_printf("%s : Command not found.\n", commandSplit[0]);
+  bin_caller(commandSplit);
+  //if (catch_error == -1)
   //FREE MULTIDIM ARRAY
   free_array(commandSplit);
   //catch_error = bin_caller(commandSplit);
@@ -50,8 +61,11 @@ char** split_cmd(char* commandLine)
 
   //COUNT NB_ARGS
   for (i_one = 0, nb_args = 1; commandLine[i_one] != '\0'; i_one++)
+  {
     if (commandLine[i_one] == ' ')
-      nb_args++;
+      if (commandLine[i_one + 1] != ' ')
+        nb_args++;
+  }
   //FIRST MALLOC WITH NB_ARGS
   commandSplit = malloc((nb_args + 1) * sizeof(char*));
   //CALL FUNCTION IN ORDER TO GET THE CHAR* SIZE OF DIFFERENT ARGS
@@ -71,17 +85,30 @@ char** split_cmd(char* commandLine)
     if (commandLine[i_one] != ' ')
     {
       commandSplit[i_two][i_three] = commandLine[i_one];
+      my_printf(" indicateur ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_three++;
     }
-    else
+    else if (commandLine[i_one + 1] != ' ')
     {
       commandSplit[i_two][i_three] = '\0';
+      my_printf(" indicateur2 ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_two++;
       i_three = 0;
     }
+    else if (commandLine[i_one + 1] == ' ')
+    {
+      commandSplit[i_two][i_three] = '\0';
+      my_printf(" indicateur3 ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
+      i_two++;
+      i_three = 0;
+      for (; commandLine[i_one] == ' '; i_one++);
+      i_one--;
+    }
   }
   commandSplit[i_two][i_three] = '\0';
+  //FUNCTION clean_space
   commandSplit[i_two + 1] = NULL;
+  //clean_space(commandSplit);
   return (commandSplit);
 }
 
@@ -94,7 +121,15 @@ int* count_char(char* commandLine, int nb_args)
   array_count = malloc(nb_args * sizeof(int));
   for (i = 0, counter = 0, nb_args = 0; commandLine[i] != '\0'; i++, counter++)
   {
-        if (commandLine[i] == ' ' || commandLine[i + 1] == '\0')
+        if (commandLine[i] == ' ')
+        {
+          for (; commandLine[i] == ' '; i++);
+          i--;
+          array_count[nb_args] = counter + 1;
+          counter = 0;
+          nb_args++;
+        }
+        else if (commandLine[i + 1] == '\0')
         {
           array_count[nb_args] = counter + 1;
           counter = 0;
@@ -102,6 +137,24 @@ int* count_char(char* commandLine, int nb_args)
         }
   }
   return (array_count);
+}
+
+void clean_space(char** commandSplit)
+{
+  int i;
+
+  for (i = 0; commandSplit[i] != NULL; i++)
+  {
+    if (commandSplit[i][0] == '\0')
+    {
+      my_printf("coucou Orianne, je passe par la fonction clean_space\n");
+      // for (; commandSplit[i + 1] != NULL; i++)
+      // {
+      //   commandSplit[i] = commandSplit[i + 1];
+      // }
+      commandSplit[i] = NULL;
+    }
+  }
 }
 
 void free_array(char** commandSplit)
