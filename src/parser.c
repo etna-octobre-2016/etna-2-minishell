@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
+#include <unistd.h>
 #include "../lib/my/src/headers/my.h"
 
 int parser(char* commandLine)
@@ -21,6 +22,13 @@ int parser(char* commandLine)
   }
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
+  if (my_strstr(commandSplit[0], "cd") != 0)
+  {
+      catch_error = chdir(commandSplit[1]);
+      if (catch_error != 0)
+        my_printf("-bash: cd: %s: Aucun fichier ou dossier de ce type\n", commandSplit[1]);
+      return (catch_error);
+  }
   //EXECUTE BIN WITH SPLITED COMMAND
   catch_error = bin_caller(commandSplit);
   if (catch_error == -1)
