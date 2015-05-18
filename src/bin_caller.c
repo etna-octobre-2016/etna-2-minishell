@@ -32,10 +32,14 @@ int    bin_caller(char* commandSplit[])
   {
     ret = execve(bin_to_exec, commandSplit, env);// CHILD
     perror(commandSplit[0]); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
+    if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
+      free(bin_to_exec);
     return (ret); // PARENT
   }
   if (wait(&ret) >= 0)
   {
+    if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
+      free(bin_to_exec);
     ret = 0;
   }
   return (ret);
@@ -51,7 +55,7 @@ char* she_banging(char* commandLine)
   char* bin_name_cleaned;
 
   //REPARSE COMMANDSPLIT
-  for (trigger = 0, i_one = 2, i_two = 0; trigger == 0; i_one++, arg_size++)
+  for (arg_size = 0, trigger = 0, i_one = 2, i_two = 0; trigger == 0; i_one++, arg_size++)
   {
     if (commandLine[i_one] == ' ' || commandLine[i_one] == '\0')
       trigger = 1;

@@ -75,7 +75,7 @@ char** split_cmd(char* commandLine)
   //MALLOC THE REST OF THE COMMANDSPLIT
   for (i_one = 0; i_one < nb_args; i_one++)
   {
-    commandSplit[i_one] = malloc(sizeof(char) * array_count[i_one]);
+    commandSplit[i_one] = malloc(sizeof(char) * array_count[i_one] + 1);
     if (commandSplit[i_one] == NULL)
       return (0);
   }
@@ -106,6 +106,7 @@ char** split_cmd(char* commandLine)
   commandSplit[i_two][i_three] = '\0';
   //FUNCTION clean_space
   commandSplit[i_two + 1] = NULL;
+  free(array_count);
   //clean_space(commandSplit);
   return (commandSplit);
 }
@@ -130,8 +131,6 @@ int* count_char(char* commandLine, int nb_args)
         else if (commandLine[i + 1] == '\0')
         {
           array_count[nb_args] = counter + 1;
-          counter = 0;
-          nb_args++;
         }
   }
   return (array_count);
