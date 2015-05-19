@@ -30,6 +30,7 @@
   char *my_strconcat(char *first_string, char *second_string);
   char *my_strstr(char *str, char *to_find);
   char *my_readline(int alloc);
+  char* my_strcpy(char* str_source);
 
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);
