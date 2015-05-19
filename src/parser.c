@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
+#include "headers/path_handler.h"
 #include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
@@ -19,11 +20,19 @@ int parser(char* commandLine)
     if (my_strchar(specials_char[i], commandLine) == 0)
       {
         my_printf("Argument found : %c\n", specials_char[i]);
+        //free commandSplit if used
         return (0);
       }
   }
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
+  //handle $PATH
+  if (my_strstr(commandSplit[0], "path") != 0)
+  {
+    path_handler(commandSplit);
+    free_array(commandSplit);
+    return (0);
+  }
   // CHANGE DIRECTORY
   if (my_strstr(commandSplit[0], "cd") != 0)
   {
@@ -39,14 +48,13 @@ int parser(char* commandLine)
       {
         perror(commandSplit[0]);
       }
+      free_array(commandSplit);
       return (catch_error);
   }
   //EXECUTE BIN WITH SPLITED COMMAND
   bin_caller(commandSplit);
-  //if (catch_error == -1)
   //FREE MULTIDIM ARRAY
   free_array(commandSplit);
-  //catch_error = bin_caller(commandSplit);
   return (1);
 }
 
@@ -107,7 +115,6 @@ char** split_cmd(char* commandLine)
   //FUNCTION clean_space
   commandSplit[i_two + 1] = NULL;
   free(array_count);
-  //clean_space(commandSplit);
   return (commandSplit);
 }
 
