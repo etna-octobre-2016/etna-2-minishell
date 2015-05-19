@@ -14,18 +14,12 @@ void path_handler(char** commandSplit)
     };
   int i;
 
+  //MASTER LOOP CALL FUNCTION
   for (i = 0; tabFunc[i].action != 0; i++)
   {
     if (my_strcmp(commandSplit[0], tabFunc[i].action) == 0)
 	    {
-        if (my_strcmp(commandSplit[0], "path") == 0)
-        {
-          tabFunc[i].ptr(commandSplit[0]);
-        }
-        else
-        {
 	       tabFunc[i].ptr(commandSplit[1]);
-        }
 	    }
   }
 }
@@ -126,13 +120,13 @@ int show_path()
   s_path* entity;
 
   entity = s_initChain->first;
-  my_printf("--- $PATH =>-----------\n");
+  my_printf("$PATH=================\n");
   while (entity != NULL)
     {
       my_printf("%s\n", entity->path);
       entity = entity->next;
     }
-    my_printf("----------------------\n");
+    my_printf("=====================>\n");
     return (0);
 }
 
