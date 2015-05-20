@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <unistd.h>
 #include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
+#include "headers/pipeline.h"
 #include "headers/prompt.h"
 
 #include <stdio.h>
@@ -63,7 +65,14 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        printf("cmd = %s -- is_piped = %d\n", cmd_current->cmd, cmd_current->is_piped);
+        if (cmd_current->is_piped)
+        {
+          pipeline(cmd_current, STDIN_FILENO);
+        }
+        else
+        {
+          parser(cmd_current);
+        }
         cmd_current = cmd_current->next;
       }
     }
