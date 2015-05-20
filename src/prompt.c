@@ -5,13 +5,16 @@
 
 #include <stdio.h>
 
-void              prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
+t_cmd_list        *prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
 {
   t_cmd_list      *tmp;
 
-  if (list->cmd == NULL)
+  // if the new_item is the first of the list
+  if (list == NULL)
   {
-    list->cmd = new_item->cmd;
+    new_item->next = NULL;
+    new_item->prev = NULL;
+    list = new_item;
   }
   else
   {
@@ -24,6 +27,12 @@ void              prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_ite
     new_item->next = NULL;
     tmp->next = new_item;
   }
+  return (list);
+}
+
+void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
+{
+  cmd->is_piped = symbol->is_pipe;
 }
 
 bool              prompt_init()
@@ -54,10 +63,7 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        if (!cmd_current->is_symbol)
-        {
-          parser(cmd_current);
-        }
+        printf("cmd = %s -- is_piped = %d\n", cmd_current->cmd, cmd_current->is_piped);
         cmd_current = cmd_current->next;
       }
     }
@@ -75,22 +81,6 @@ char              *prompt_cmd_read()
   return my_readline(PROMPT_BUFFER_SIZE);
 }
 
-t_cmd_list        *prompt_cmd_list_init()
-{
-  t_cmd_list      *cmd_list;
-
-  cmd_list = malloc(sizeof(*cmd_list));
-  if (cmd_list == NULL)
-  {
-    return (NULL);
-  }
-  cmd_list->is_symbol = false;
-  cmd_list->cmd = NULL;
-  cmd_list->prev = NULL;
-  cmd_list->next = NULL;
-  return (cmd_list);
-}
-
 t_cmd_list        *prompt_cmd_split(char *cmd)
 {
   bool            is_split_complete;
@@ -99,12 +89,8 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
   t_cmd_list      *cmd_list_item;
   t_symbol_match  *first_special_symbol;
 
-  cmd_list = prompt_cmd_list_init();
-  if (cmd_list == NULL)
-  {
-    return (NULL);
-  }
   tmp = cmd;
+  cmd_list = NULL;
   is_split_complete = false;
   while (!is_split_complete)
   {
@@ -117,7 +103,6 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
     if (first_special_symbol->position == -1)
     {
       is_split_complete = true;
-      cmd_list_item->is_symbol = false;
       cmd_list_item->cmd = tmp;
     }
     else
@@ -127,19 +112,11 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
       {
         return (NULL);
       }
-      cmd_list_item->is_symbol = false;
       my_strncpy(cmd_list_item->cmd, tmp, first_special_symbol->position);
-      prompt_cmd_list_add_item(cmd_list, cmd_list_item);
-      cmd_list_item = malloc(sizeof(*cmd_list_item));
-      if (cmd_list_item == NULL)
-      {
-        return (NULL);
-      }
-      cmd_list_item->is_symbol = true;
-      cmd_list_item->cmd = first_special_symbol->string;
       tmp = (tmp + first_special_symbol->position + my_strlen(first_special_symbol->string));
     }
-    prompt_cmd_list_add_item(cmd_list, cmd_list_item);
+    cmd_list = prompt_cmd_list_add_item(cmd_list, cmd_list_item);
+    prompt_cmd_set_flags(cmd_list_item, first_special_symbol);
   }
   return (cmd_list);
 }
@@ -157,6 +134,7 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
     return (NULL);
   }
   // @note: setting default values
+  symbol->is_pipe = false;
   symbol->position = -1;
   symbol->string = NULL;
   current_position = -1;
@@ -167,6 +145,14 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
     {
       symbol->position = current_position;
       symbol->string = special_symbols[i];
+    }
+  }
+  // Symbol recognition
+  if (symbol->string != NULL)
+  {
+    if (my_strcmp(symbol->string, "|") == 0)
+    {
+      symbol->is_pipe = true;
     }
   }
   return (symbol);

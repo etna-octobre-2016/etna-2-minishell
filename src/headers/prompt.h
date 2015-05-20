@@ -19,15 +19,16 @@
   ///////////////////////////////////////////////////////
   struct              s_cmd_list
   {
-    bool              is_symbol;
+    bool              is_piped;
     char              *cmd;
     struct s_cmd_list *prev;
     struct s_cmd_list *next;
   };
   struct              s_symbol_match
   {
-    char              *string;
+    bool              is_pipe;
     int               position;
+    char              *string;
   };
 
 
@@ -42,11 +43,11 @@
   // PROTOTYPES
   ///////////////////////////////////////////////////////
   bool            prompt_init();
-  void            prompt_cmd_list_add_item(t_cmd_list *, t_cmd_list *);
+  void            prompt_cmd_set_flags(t_cmd_list *, t_symbol_match *);
   void            prompt_show();
 
   char            *prompt_cmd_read();
-  t_cmd_list      *prompt_cmd_list_init();
+  t_cmd_list      *prompt_cmd_list_add_item(t_cmd_list *, t_cmd_list *);
   t_cmd_list      *prompt_cmd_split(char *);
   t_symbol_match  *prompt_cmd_find_first_symbol(char *);
 
