@@ -20,6 +20,7 @@
   struct              s_cmd_list
   {
     bool              is_piped;
+    bool              is_executed;
     char              *cmd;
     struct s_cmd_list *prev;
     struct s_cmd_list *next;
