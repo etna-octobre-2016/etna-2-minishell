@@ -3,10 +3,17 @@
 
 #include <stdio.h>
 
-void pipeline(t_cmd_list *cmd, int input_fd)
+t_cmd_list *pipeline(t_cmd_list *cmd, int input_fd)
 {
-  cmd = cmd;
-  input_fd = input_fd;
-
-  printf("pipeline called\n");
+  // last command
+  if (!cmd->is_piped)
+  {
+    printf("last cmd in pipeline = %s\n", cmd->cmd);
+    return (cmd);
+  }
+  else
+  {
+    printf("pipelined cmd = %s\n", cmd->cmd);
+    return pipeline(cmd->next, input_fd);
+  }
 }

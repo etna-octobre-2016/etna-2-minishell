@@ -34,7 +34,6 @@ t_cmd_list        *prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_it
 
 void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
 {
-  cmd->is_executed = false;
   cmd->is_piped = symbol->is_pipe;
 }
 
@@ -66,10 +65,14 @@ bool              prompt_init()
       cmd_current = cmd_list;
       while(cmd_current != NULL)
       {
-        printf("cmd = %s -- is_piped = %d -- is_executed = %d\n\n", cmd_current->cmd, cmd_current->is_piped, cmd_current->is_executed);
-        if (!cmd_current->is_executed)
+        if (cmd_current->is_piped)
         {
-            parser(cmd_current);
+          cmd_current = pipeline(cmd_current, STDIN_FILENO);
+        }
+        else
+        {
+          printf("normal call for cmd = %s\n", cmd_current->cmd);
+          // parser(cmd_current, STDIN_FILENO);
         }
         cmd_current = cmd_current->next;
       }
