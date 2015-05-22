@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 #include "../lib/my/src/headers/my.h"
 #include "headers/parser.h"
 #include "headers/prompt.h"
@@ -17,6 +18,7 @@ void    prompt_init()
     {
       parser(cmd);
     }
+    free(cmd);
   }
 }
 
