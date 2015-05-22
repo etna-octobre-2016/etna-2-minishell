@@ -1,8 +1,18 @@
+#include <stdlib.h>
 #include "headers/prompt.h"
+#include "headers/path_handler.h"
 #include "headers/main.h"
 
-int main()
+int   main()
 {
-  prompt_init();
-  return (0);
+  int ret;
+
+  ret = EXIT_SUCCESS;
+  path_handler_init();
+  if (prompt_init() == false)
+  {
+    ret = EXIT_FAILURE;
+  }
+  free_chain_path(s_initChain);
+  return (ret);
 }

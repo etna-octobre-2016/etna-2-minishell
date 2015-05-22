@@ -27,9 +27,13 @@
   int my_strchar(char to_find, char* string);
   size_t my_strlen(const char *);
   int my_strcmp(char *s1, char *s2);
+  int my_strpos(char *, char *);
   char *my_strconcat(char *first_string, char *second_string);
+  char *my_strcpy(char *str_source);
+  char *my_strncpy(char *, char *, int);
   char *my_strstr(char *str, char *to_find);
   char *my_readline(int alloc);
+  char* my_strcpy(char* str_source);
 
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);
