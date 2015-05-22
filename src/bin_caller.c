@@ -1,5 +1,6 @@
 #include "headers/bin_caller.h"
 #include "headers/parser.h"
+#include "headers/path_handler.h"
 #include "../lib/my/src/headers/my.h"
 #include <unistd.h>
 #include <stdlib.h>
@@ -17,7 +18,8 @@ int    bin_caller(char* commandSplit[])
   char* bin_to_exec;
 
   if (my_strstr(commandSplit[0], "./") == 0)
-    bin_to_exec = my_strconcat(ENV_ARG_PATH, commandSplit[0]);
+  //SEARCH AND ADD PATH BEFORE EXEC BIN
+    bin_to_exec = set_path_to_bin(commandSplit[0]);
   else
     bin_to_exec = commandSplit[0];
   //FORK INIT
@@ -43,6 +45,35 @@ int    bin_caller(char* commandSplit[])
     ret = 0;
   }
   return (ret);
+}
+
+char* set_path_to_bin(char* bin)
+{
+  s_path* entity;
+  char* path_to_try;
+
+  path_to_try = NULL;
+  entity = s_initChain->first;
+  //BROWSE LIST
+  while (entity != NULL)
+  {
+    //FREE IF ALREADY CONCAT BY MY_STRCONCAT
+    if (path_to_try != NULL)
+    {
+      free(path_to_try);
+    }
+    path_to_try = my_strconcat(entity->path, bin);
+    // TRY ACCESS TO BIN
+    if (access(path_to_try, F_OK) == 0)
+    {
+      return (path_to_try);
+    }
+    else
+    {
+      entity = entity->next;
+    }
+  }
+  return (path_to_try);
 }
 
 char* she_banging(char* commandLine)
