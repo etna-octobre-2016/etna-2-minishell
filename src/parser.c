@@ -13,7 +13,7 @@ int parser(char* commandLine)
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
   //EXECUTE BIN WITH SPLITED COMMAND
-  catch_error = bin_caller(commandSplit, command);
+  catch_error = bin_caller(commandSplit);
   if (catch_error == -1)
     my_printf("Command not found.\n");
   //FREE MULTIDIM ARRAY
