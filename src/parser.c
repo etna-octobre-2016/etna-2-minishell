@@ -1,29 +1,18 @@
-#include <stdlib.h>
-#include "headers/parser.h"
-#include "headers/bin_caller.h"
-#include "headers/path_handler.h"
-#include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "../lib/my/src/headers/my.h"
+#include "headers/bin_caller.h"
+#include "headers/path_handler.h"
+#include "headers/parser.h"
 
 int parser(char* commandLine)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
-  int i;
   int catch_error;
-  char specials_char[] = SPECIALS_CHAR;
   char** commandSplit;
 
-  for(i = 0; specials_char[i] != '0'; i++)
-  {
-    if (my_strchar(specials_char[i], commandLine) == 0)
-      {
-        my_printf("Argument found : %c\n", specials_char[i]);
-        //free commandSplit if used
-        return (0);
-      }
-  }
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
   //handle $PATH

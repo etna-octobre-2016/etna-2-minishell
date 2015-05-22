@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int    bin_caller(char* commandSplit[])
+int    bin_caller(char *commandSplit[])
 {
   int ret;
   int pid;

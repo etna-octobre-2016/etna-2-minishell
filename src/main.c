@@ -1,13 +1,18 @@
+#include <stdlib.h>
 #include "headers/prompt.h"
 #include "headers/path_handler.h"
 #include "headers/main.h"
 
-int main()
+int   main()
 {
-  //INIT LIST PATH
+  int ret;
+
+  ret = EXIT_SUCCESS;
   path_handler_init();
-  prompt_init();
-  //delete and frees before close shell
+  if (prompt_init() == false)
+  {
+    ret = EXIT_FAILURE;
+  }
   free_chain_path(s_initChain);
-  return (0);
+  return (ret);
 }
