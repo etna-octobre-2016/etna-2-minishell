@@ -72,7 +72,7 @@ bool              prompt_init()
         else
         {
           printf("normal call for cmd = %s\n", cmd_current->cmd);
-          // parser(cmd_current, STDIN_FILENO);
+          parser(cmd_current->cmd);
         }
         cmd_current = cmd_current->next;
       }

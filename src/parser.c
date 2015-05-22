@@ -3,14 +3,12 @@
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
 
-int parser(t_cmd_list *command)
+int parser(char* commandLine)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
   int catch_error;
   char *commandLine;
   char** commandSplit;
-
-  commandLine = command->cmd;
 
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);

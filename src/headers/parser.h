@@ -9,7 +9,7 @@
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
-  int parser(t_cmd_list *);
+  int parser(char* commandLine);
   char** split_cmd(char* commandLine);
   int* count_char(char* commandLine, int nb_args);
   void free_array(char** commandSplit);
