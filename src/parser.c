@@ -7,7 +7,6 @@ int parser(char* commandLine)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
   int catch_error;
-  char *commandLine;
   char** commandSplit;
 
   //SPLIT USER COMMAND FOR EXECVE
