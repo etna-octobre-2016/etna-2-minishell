@@ -116,18 +116,18 @@ int* count_char(char* commandLine, int nb_args)
   array_count = malloc(nb_args * sizeof(int));
   for (i = 0, counter = 0, nb_args = 0; commandLine[i] != '\0'; i++, counter++)
   {
-        if (commandLine[i] == ' ')
-        {
-          for (; commandLine[i] == ' '; i++);
-          i--;
-          array_count[nb_args] = counter + 1;
-          counter = 0;
-          nb_args++;
-        }
-        else if (commandLine[i + 1] == '\0')
-        {
-          array_count[nb_args] = counter + 1;
-        }
+    if (commandLine[i] == ' ')
+    {
+      for (; commandLine[i] == ' '; i++);
+      i--;
+      array_count[nb_args] = counter + 1;
+      counter = 0;
+      nb_args++;
+    }
+    else if (commandLine[i + 1] == '\0')
+    {
+      array_count[nb_args] = counter + 1;
+    }
   }
   return (array_count);
 }
