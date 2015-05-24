@@ -43,7 +43,6 @@ bool              prompt_init()
   t_cmd_list      *cmd_current;
   t_cmd_list      *cmd_list;
   is_success = true;
-  int input_fd[2];
 
   while (1)
   {
@@ -67,7 +66,7 @@ bool              prompt_init()
       {
         if (cmd_current->is_piped)
         {
-          cmd_current = pipeline(cmd_current, input_fd);
+          cmd_current = pipeline(cmd_current, -1);
         }
         else
         {

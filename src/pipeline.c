@@ -9,95 +9,63 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int pipe_trigger = 0;
-
-t_cmd_list *pipeline(t_cmd_list *cmd, int input_fd[2])
+t_cmd_list *pipeline(t_cmd_list *cmd, int input)
 {
   // last command
-  int   childpid;
   char** commandSplit;
+  int pipe_var[2];
   int ret;
 
-  commandSplit = split_cmd(cmd->cmd);
-
-  my_printf("cmd->cmd = %s\n", cmd->cmd);
-  my_printf("commandSplit[0] = %s\n", commandSplit[0]);
-  my_printf("commandSplit[1] = %s\n", commandSplit[1]);
-  if (pipe_trigger == 0)
+  pipe_var[0] = -1;
+  pipe_var[1] = -1;
+  if (cmd->next != NULL)
   {
-    if (pipe(input_fd) == -1)
-    {
-      exit(1);
-    }
-    pipe_trigger++;
-    my_printf("PIPE_TRIGGER = %d", pipe_trigger);
+    pipe(pipe_var);
   }
-  if (!cmd->is_piped)
-  {
-    if((childpid = fork()) == -1)
+  if (fork() == 0)
+  { /* child */
+    if (input != -1)
     {
-            perror("fork");
-            exit(1);
+      // my_printf("Child : input != -1 : cmd : %s\n",cmd->cmd);
+      dup2(input, STDIN_FILENO);
+      close(input);
     }
-    if(childpid == 0)
+    if (pipe_var[1] != -1)
     {
-            /* Child process closes up input side of pipe */
-            dup2(input_fd[0], 0);
-
-            ret = bin_caller(commandSplit);
-            exit(0);
+      // my_printf("Child : pipe_var[1] != -1 : cmd : %s\n",cmd->cmd);
+      dup2(pipe_var[1], STDOUT_FILENO);
+      close(pipe_var[1]);
     }
-    if (wait(&ret) >= 0)
+    if (pipe_var[0] != -1)
     {
-            /* Parent process closes up output side of pipe */
-            close(input_fd[0]);
-            close(input_fd[1]);
+      // my_printf("Child : pipe_var[0] != -1 : cmd : %s\n",cmd->cmd);
+      close(pipe_var[0]);
     }
+    commandSplit = split_cmd(cmd->cmd);
+    ret = 0;
+    ret = bin_caller(commandSplit);
     free_array(commandSplit);
-    pipe_trigger = 0;
-    input_fd = NULL;
-    return (cmd);
+    exit(1);
   }
-  else
-  {
-    if((childpid = fork()) == -1)
+  if (wait(&ret) >= 0)
+  { /* parent */
+    if (input != -1)
     {
-            perror("fork");
-            exit(1);
+      // my_printf("Parent : input != -1 : cmd : %s\n",cmd->cmd);
+      close(input);
     }
-    if(childpid == 0)
+    if (pipe_var[1] != -1)
     {
-            /* Child process closes up input side of pipe */
-            //if (pipe_trigger == 2)
-            //{
-              my_printf("CHILD DUPING: input[0],0\n");
-              dup2(input_fd[0], 0);
-            //}
-            my_printf("CHILD avant dup : input[1],1\n");
-            dup2(input_fd[1], 1);
-            my_printf("CHILD apres dup : input[1],1\n");
-            /* Send "string" through the output side of pipe */
-            ret = bin_caller(commandSplit);
-            my_printf("CHILD apres bin_caller\n");
-            exit(0);
+      // my_printf("Parent : pipe_var[1] != -1 : cmd : %s\n",cmd->cmd);
+      close(pipe_var[1]);
     }
-    if (wait(&ret) >= 0)
+    if (cmd->next != NULL)
     {
-            /* Parent process closes up output side of pipe */
-            //if (pipe_trigger == 2)
-            //{
-              my_printf("close input[0],0\n");
-              //close(input_fd[0]);
-            //}
-            my_printf("PARENT avant close : input[1]\n");
-            //close(input_fd[0]);
-            close(input_fd[1]);
-            my_printf("PARENT apres close : input[1]\n");
-            return pipeline(cmd->next, input_fd);
+      cmd = cmd->next;
+      // my_printf("Parent : Next cmd  : cmd : %s\n",cmd->cmd);
+      return(pipeline(cmd, pipe_var[0]));
     }
-    free_array(commandSplit);
-    pipe_trigger = 2;
-    return pipeline(cmd->next, input_fd);
   }
+  // my_printf("Return cmd : %s\n",cmd->cmd);
   return (cmd);
 }
