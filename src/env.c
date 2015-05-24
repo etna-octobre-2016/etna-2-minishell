@@ -49,6 +49,20 @@ bool              env_set_var(char *name, char *value)
   }
   return (is_error);
 }
+void              env_free_list()
+{
+  t_env_variable  *node;
+  t_env_variable  *tmp;
+
+  node = g_env_variable;
+  while (node != NULL)
+  {
+    tmp = node;
+    node = node->next;
+    free(tmp);
+  }
+  g_env_variable = NULL;
+}
 void              env_print_var(char *name)
 {
   t_env_variable  *tmp;
