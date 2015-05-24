@@ -30,7 +30,7 @@ bool              env_set_var(char *name, char *value)
     {
       tmp = g_env_variable;
       is_new = true;
-      while (tmp != NULL)
+      do
       {
         if (my_strcmp(tmp->name, name) == 0)
         {
@@ -39,15 +39,50 @@ bool              env_set_var(char *name, char *value)
           free(variable);
           break;
         }
+        if (is_new && tmp->next == NULL)
+        {
+          tmp->next = variable;
+        }
         tmp = tmp->next;
-      }
-      if (is_new)
-      {
-        tmp->next = variable;
-      }
+      } while (tmp->next != NULL);
     }
   }
   return (is_error);
+}
+void              env_print_var(char *name)
+{
+  t_env_variable  *tmp;
+  t_env_variable  *variable;
+
+  tmp = g_env_variable;
+  variable = NULL;
+  while (tmp != NULL)
+  {
+    if (name != NULL)
+    {
+      if (my_strcmp(tmp->name, name) == 0)
+      {
+        variable = tmp;
+        break;
+      }
+    }
+    else
+    {
+      my_printf("%s=%s\n", tmp->name, tmp->value);
+    }
+    tmp = tmp->next;
+  }
+  if (name != NULL)
+  {
+    if (variable != NULL)
+    {
+      my_printf("%s: %s\n", variable->name, variable->value);
+    }
+    else
+    {
+      my_printf("error: '%s' environment variable not found\n", name);
+    }
+  }
 }
 void              env_unset_var(char *name)
 {

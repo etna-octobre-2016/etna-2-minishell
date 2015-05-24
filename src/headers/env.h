@@ -29,6 +29,7 @@
   // PROTOTYPES
   ///////////////////////////////////////////////////////
   bool            env_set_var(char *name, char *value);
+  void            env_print_var(char *name);
   void            env_unset_var(char *name);
   t_env_variable  *env_get_list();
   t_env_variable  *env_get_var(char *name);
