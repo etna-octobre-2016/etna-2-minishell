@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include "headers/prompt.h"
-#include "headers/path_handler.h"
 #include "headers/main.h"
 
 int   main()

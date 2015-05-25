@@ -5,6 +5,7 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/bin_caller.h"
 #include "headers/path_handler.h"
+#include "headers/env.h"
 #include "headers/parser.h"
 
 int parser(char* commandLine)
@@ -39,6 +40,19 @@ int parser(char* commandLine)
       }
       free_array(commandSplit);
       return (catch_error);
+  }
+  // ENV VARIABLES PRINT
+  if (my_strstr(commandSplit[0], "env") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_print_var(commandSplit[1]);
+    }
+    else
+    {
+      env_print_var(NULL);
+    }
+    return (1);
   }
   //EXECUTE BIN WITH SPLITED COMMAND
   bin_caller(commandSplit);
