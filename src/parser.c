@@ -42,6 +42,19 @@ int parser(char* commandLine)
       return (catch_error);
   }
   // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "unsetenv") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_unset_var(commandSplit[1]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
+  // ENV VARIABLES SET
   else if (my_strstr(commandSplit[0], "setenv") != 0)
   {
     if (commandSplit[1] != NULL && commandSplit[2] != NULL)
