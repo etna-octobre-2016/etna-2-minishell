@@ -8,6 +8,7 @@ bool              env_set_var(char *name, char *value)
 {
   bool            is_error;
   bool            is_new;
+  t_env_variable  *last;
   t_env_variable  *tmp;
   t_env_variable  *variable;
 
@@ -30,7 +31,7 @@ bool              env_set_var(char *name, char *value)
     {
       tmp = g_env_variable;
       is_new = true;
-      do
+      while (tmp != NULL)
       {
         if (my_strcmp(tmp->name, name) == 0)
         {
@@ -39,12 +40,16 @@ bool              env_set_var(char *name, char *value)
           free(variable);
           break;
         }
-        if (is_new && tmp->next == NULL)
+        if (tmp->next == NULL)
         {
-          tmp->next = variable;
+          last = tmp;
         }
         tmp = tmp->next;
-      } while (tmp->next != NULL);
+      }
+      if (is_new)
+      {
+        last->next = variable;
+      }
     }
   }
   return (is_error);
