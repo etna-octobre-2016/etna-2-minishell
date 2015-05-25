@@ -24,7 +24,7 @@ int parser(char* commandLine)
     return (0);
   }
   // CHANGE DIRECTORY
-  if (my_strstr(commandSplit[0], "cd") != 0)
+  else if (my_strstr(commandSplit[0], "cd") != 0)
   {
       if (commandSplit[1] != NULL)
       {
@@ -41,8 +41,21 @@ int parser(char* commandLine)
       free_array(commandSplit);
       return (catch_error);
   }
+  // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "setenv") != 0)
+  {
+    if (commandSplit[1] != NULL && commandSplit[2] != NULL)
+    {
+      env_set_var(commandSplit[1], commandSplit[2]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
   // ENV VARIABLES PRINT
-  if (my_strstr(commandSplit[0], "env") != 0)
+  else if (my_strstr(commandSplit[0], "env") != 0)
   {
     if (commandSplit[1] != NULL)
     {
@@ -54,11 +67,14 @@ int parser(char* commandLine)
     }
     return (1);
   }
-  //EXECUTE BIN WITH SPLITED COMMAND
-  bin_caller(commandSplit);
-  //FREE MULTIDIM ARRAY
-  free_array(commandSplit);
-  return (1);
+  else
+  {
+    //EXECUTE BIN WITH SPLITED COMMAND
+    bin_caller(commandSplit);
+    //FREE MULTIDIM ARRAY
+    free_array(commandSplit);
+    return (1);
+  }
 }
 
 char** split_cmd(char* commandLine)
