@@ -58,10 +58,11 @@ char** split_cmd(char* commandLine)
   int trigger_first_white_spaces;
 
   //COUNT NB_ARGS
-  for (i_one = 0, nb_args = 1; commandLine[i_one] != '\0'; i_one++)
+  for (i_one = 1; commandLine[i_one] == ' '; i_one++);
+  for (nb_args = 1; commandLine[i_one] != '\0'; i_one++)
   {
-    if (commandLine[i_one] == ' ')
-      if (commandLine[i_one + 1] != ' ')
+   if (commandLine[i_one] == ' ')
+      if (commandLine[i_one + 1] != ' ' && commandLine[i_one + 1] != '\0')
         nb_args++;
   }
   //FIRST MALLOC WITH NB_ARGS
@@ -102,9 +103,16 @@ char** split_cmd(char* commandLine)
       i_one--;
     }
   }
-  commandSplit[i_two][i_three] = '\0';
-  //FUNCTION clean_space
-  commandSplit[i_two + 1] = NULL;
+  if (trigger_first_white_spaces == 1)
+  {
+    commandSplit[i_two][i_three] = '\0';
+    //FUNCTION clean_space
+    commandSplit[i_two + 1] = NULL;
+  }
+  else
+  {
+    commandSplit[i_two] = NULL;
+  }
   free(array_count);
   return (commandSplit);
 }
