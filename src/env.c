@@ -168,7 +168,8 @@ char              **env_get_array()
   variable = g_env_variable;
   while (variable != NULL)
   {
-    array[(i - 1)] = my_strconcat(variable->name, variable->value);
+    array[(i - 1)] = my_strconcat(variable->name, "=");
+    array[(i - 1)] = my_strconcat(array[(i - 1)], variable->value);
     i++;
     array = realloc(array, (i * sizeof(*array)));
     if (array == NULL)
