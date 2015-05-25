@@ -34,5 +34,6 @@
   void            env_unset_var(char *name);
   t_env_variable  *env_get_list();
   t_env_variable  *env_get_var(char *name);
+  char            **env_get_array();
 
 #endif

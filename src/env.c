@@ -153,3 +153,30 @@ t_env_variable    *env_get_var(char *name)
   }
   return (variable);
 }
+char              **env_get_array()
+{
+  int             i;
+  char            **array;
+  t_env_variable  *variable;
+
+  array = malloc(sizeof(*array));
+  if (array == NULL)
+  {
+    return (NULL);
+  }
+  i = 1;
+  variable = g_env_variable;
+  while (variable != NULL)
+  {
+    array[(i - 1)] = my_strconcat(variable->name, variable->value);
+    i++;
+    array = realloc(array, (i * sizeof(*array)));
+    if (array == NULL)
+    {
+      return (NULL);
+    }
+    variable = variable->next;
+  }
+  array[(i - 1)] = NULL;
+  return (array);
+}
