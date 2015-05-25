@@ -105,28 +105,30 @@ void              env_print_var(char *name)
 }
 void              env_unset_var(char *name)
 {
-  t_env_variable  *tmp;
+  t_env_variable  *prev;
   t_env_variable  *variable;
 
-  tmp = g_env_variable;
-  while (tmp != NULL)
+  variable = g_env_variable;
+  while (variable != NULL)
   {
-    if (my_strcmp(tmp->name, name) == 0)
+    if (my_strcmp(variable->name, name) == 0)
     {
-      variable = tmp;
-      if (variable == g_env_variable) // first node deletion
+      if (variable == g_env_variable)
       {
         g_env_variable = variable->next;
       }
       else
       {
-        tmp--;
-        tmp->next = variable->next;
+        prev->next = variable->next;
       }
       free(variable);
       return;
     }
-    tmp = tmp->next;
+    else
+    {
+      prev = variable;
+      variable = variable->next;
+    }
   }
 }
 t_env_variable    *env_get_list()
