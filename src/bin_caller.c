@@ -42,7 +42,6 @@ int    bin_caller(char *commandSplit[])
   {
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
       free(bin_to_exec);
-    ret = 0;
   }
   return (ret);
 }
