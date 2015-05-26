@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include "headers/prompt.h"
-#include "headers/path_handler.h"
 #include "headers/main.h"
 
 int   main()
@@ -14,5 +11,6 @@ int   main()
     ret = EXIT_FAILURE;
   }
   free_chain_path(s_initChain);
+  env_free_list();
   return (ret);
 }

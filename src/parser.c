@@ -5,6 +5,7 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/bin_caller.h"
 #include "headers/path_handler.h"
+#include "headers/env.h"
 #include "headers/parser.h"
 
 int parser(char* commandLine)
@@ -23,7 +24,7 @@ int parser(char* commandLine)
     return (0);
   }
   // CHANGE DIRECTORY
-  if (my_strstr(commandSplit[0], "cd") != 0)
+  else if (my_strstr(commandSplit[0], "cd") != 0)
   {
       if (commandSplit[1] != NULL)
       {
@@ -40,11 +41,53 @@ int parser(char* commandLine)
       free_array(commandSplit);
       return (catch_error);
   }
-  //EXECUTE BIN WITH SPLITED COMMAND
-  bin_caller(commandSplit);
-  //FREE MULTIDIM ARRAY
-  free_array(commandSplit);
-  return (1);
+  // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "unsetenv") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_unset_var(commandSplit[1]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
+  // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "setenv") != 0)
+  {
+    if (commandSplit[1] != NULL && commandSplit[2] != NULL)
+    {
+      env_set_var(commandSplit[1], commandSplit[2]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
+  // ENV VARIABLES PRINT
+  else if (my_strstr(commandSplit[0], "env") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_print_var(commandSplit[1]);
+    }
+    else
+    {
+      env_print_var(NULL);
+    }
+    return (1);
+  }
+  else
+  {
+    //EXECUTE BIN WITH SPLITED COMMAND
+    bin_caller(commandSplit);
+    //FREE MULTIDIM ARRAY
+    free_array(commandSplit);
+    return (1);
+  }
 }
 
 char** split_cmd(char* commandLine)
