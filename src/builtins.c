@@ -72,9 +72,10 @@ int   builtin_setenv(char **commandSplit)
 }
 int   builtin_unsetenv(char **commandSplit)
 {
-  int ret;
-
-  ret = 0;
-  printf("builtin = unsetenv, cmd = %s\n", commandSplit[0]);
-  return (ret);
+  if (commandSplit[1] != NULL)
+  {
+    env_unset_var(commandSplit[1]);
+    return (BUILTIN_SUCCESS);
+  }
+  return (BUILTIN_ERROR);
 }
