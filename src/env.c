@@ -1,7 +1,5 @@
 #include "headers/env.h"
 
-#include <stdio.h> //@todo: remove this
-
 static t_env_variable *g_env_variable = NULL;
 
 bool              env_set_var(char *name, char *value)
