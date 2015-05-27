@@ -63,11 +63,12 @@ int   builtin_path(char **commandSplit)
 }
 int   builtin_setenv(char **commandSplit)
 {
-  int ret;
-
-  ret = 0;
-  printf("builtin = setenv, cmd = %s\n", commandSplit[0]);
-  return (ret);
+  if (commandSplit[1] != NULL && commandSplit[2] != NULL)
+  {
+    env_set_var(commandSplit[1], commandSplit[2]);
+    return (BUILTIN_SUCCESS);
+  }
+  return (BUILTIN_ERROR);
 }
 int   builtin_unsetenv(char **commandSplit)
 {
