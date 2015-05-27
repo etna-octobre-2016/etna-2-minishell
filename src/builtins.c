@@ -7,7 +7,7 @@ int   builtin_cd(char **commandSplit)
   int ret;
 
   ret = BUILTIN_SUCCESS;
-  if (commandSplit[1] != NULL || chdir(commandSplit[1]) == -1)
+  if (commandSplit[1] == NULL || chdir(commandSplit[1]) == -1)
   {
     ret = BUILTIN_ERROR;
   }
