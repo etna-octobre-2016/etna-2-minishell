@@ -6,8 +6,15 @@ int   builtin_cd(char **commandSplit)
 {
   int ret;
 
-  ret = 0;
-  printf("builtin = cd, cmd = %s\n", commandSplit[0]);
+  ret = BUILTIN_SUCCESS;
+  if (commandSplit[1] != NULL || chdir(commandSplit[1]) == -1)
+  {
+    ret = BUILTIN_ERROR;
+  }
+  if (ret == BUILTIN_ERROR)
+  {
+    perror(commandSplit[0]);
+  }
   return (ret);
 }
 int   builtin_env(char **commandSplit)
