@@ -34,7 +34,9 @@ int         builtin_handle(char **commandSplit)
   int       i;
   int       ret;
   t_builtin builtins[] = {
+    {"add_path", builtin_path_add},
     {"cd", builtin_cd},
+    {"del_path", builtin_path_del},
     {"env", builtin_env},
     {"path", builtin_path},
     {"pwd", builtin_pwd},
@@ -58,8 +60,34 @@ int   builtin_path(char **commandSplit)
 {
   int ret;
 
-  ret = 0;
-  printf("builtin = path, cmd = %s\n", commandSplit[0]);
+  UNUSED(commandSplit);
+  ret = BUILTIN_SUCCESS;
+  if (show_path() != 0)
+  {
+    ret = BUILTIN_ERROR;
+  }
+  return (ret);
+}
+int builtin_path_add(char **commandSplit)
+{
+  int ret;
+
+  ret = BUILTIN_SUCCESS;
+  if (commandSplit[1] == NULL || add_path(commandSplit[1]) != 0)
+  {
+    ret = BUILTIN_ERROR;
+  }
+  return (ret);
+}
+int builtin_path_del(char **commandSplit)
+{
+  int ret;
+
+  ret = BUILTIN_SUCCESS;
+  if (commandSplit[1] == NULL || del_path(commandSplit[1]) != 0)
+  {
+    ret = BUILTIN_ERROR;
+  }
   return (ret);
 }
 int     builtin_pwd(char **commandSplit)
