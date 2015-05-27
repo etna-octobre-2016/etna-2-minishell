@@ -16,6 +16,7 @@ int parser(char* commandLine)
 
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
+  //CHANGED Update my_strstr for my_strcmp
   //handle $PATH
   if (my_strstr(commandSplit[0], "path") != 0)
   {
@@ -24,7 +25,7 @@ int parser(char* commandLine)
     return (0);
   }
   // CHANGE DIRECTORY
-  else if (my_strstr(commandSplit[0], "cd") != 0)
+  else if (my_strcmp(commandSplit[0], "cd") == 0)
   {
       if (commandSplit[1] != NULL)
       {
@@ -42,7 +43,7 @@ int parser(char* commandLine)
       return (catch_error);
   }
   // ENV VARIABLES SET
-  else if (my_strstr(commandSplit[0], "unsetenv") != 0)
+  else if (my_strcmp(commandSplit[0], "unsetenv") == 0)
   {
     if (commandSplit[1] != NULL)
     {
@@ -55,9 +56,9 @@ int parser(char* commandLine)
     }
   }
   // ENV VARIABLES SET
-  else if (my_strstr(commandSplit[0], "setenv") != 0)
+  else if (my_strcmp(commandSplit[0], "setenv") == 0)
   {
-    if (commandSplit[1] != NULL && commandSplit[2] != NULL)
+    if (commandSplit[1] != NULL) //&& commandSplit[2] != NULL)
     {
       env_set_var(commandSplit[1], commandSplit[2]);
       return (1);
@@ -68,7 +69,7 @@ int parser(char* commandLine)
     }
   }
   // ENV VARIABLES PRINT
-  else if (my_strstr(commandSplit[0], "env") != 0)
+  else if (my_strcmp(commandSplit[0], "env") == 0)
   {
     if (commandSplit[1] != NULL)
     {

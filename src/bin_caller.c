@@ -20,8 +20,13 @@ int    bin_caller(char *commandSplit[])
 
   env = env_get_array();
   if (my_strstr(commandSplit[0], "./") == 0)
-  //SEARCH AND ADD PATH BEFORE EXEC BIN
-    bin_to_exec = set_path_to_bin(commandSplit[0]);
+  {
+    if (commandSplit[0][0] == '/')
+      bin_to_exec = commandSplit[0];
+    else
+      //SEARCH AND ADD PATH BEFORE EXEC BIN
+      bin_to_exec = set_path_to_bin(commandSplit[0]);
+  }
   else
     bin_to_exec = commandSplit[0];
   //FORK INIT
