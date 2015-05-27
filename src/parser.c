@@ -5,6 +5,7 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/bin_caller.h"
 #include "headers/path_handler.h"
+#include "headers/env.h"
 #include "headers/parser.h"
 
 int parser(char* commandLine)
@@ -23,7 +24,7 @@ int parser(char* commandLine)
     return (0);
   }
   // CHANGE DIRECTORY
-  if (my_strstr(commandSplit[0], "cd") != 0)
+  else if (my_strstr(commandSplit[0], "cd") != 0)
   {
       if (commandSplit[1] != NULL)
       {
@@ -40,11 +41,53 @@ int parser(char* commandLine)
       free_array(commandSplit);
       return (catch_error);
   }
-  //EXECUTE BIN WITH SPLITED COMMAND
-  bin_caller(commandSplit);
-  //FREE MULTIDIM ARRAY
-  free_array(commandSplit);
-  return (1);
+  // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "unsetenv") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_unset_var(commandSplit[1]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
+  // ENV VARIABLES SET
+  else if (my_strstr(commandSplit[0], "setenv") != 0)
+  {
+    if (commandSplit[1] != NULL && commandSplit[2] != NULL)
+    {
+      env_set_var(commandSplit[1], commandSplit[2]);
+      return (1);
+    }
+    else
+    {
+      return (-1);
+    }
+  }
+  // ENV VARIABLES PRINT
+  else if (my_strstr(commandSplit[0], "env") != 0)
+  {
+    if (commandSplit[1] != NULL)
+    {
+      env_print_var(commandSplit[1]);
+    }
+    else
+    {
+      env_print_var(NULL);
+    }
+    return (1);
+  }
+  else
+  {
+    //EXECUTE BIN WITH SPLITED COMMAND
+    bin_caller(commandSplit);
+    //FREE MULTIDIM ARRAY
+    free_array(commandSplit);
+    return (1);
+  }
 }
 
 char** split_cmd(char* commandLine)
@@ -55,12 +98,14 @@ char** split_cmd(char* commandLine)
   int* array_count;
   int nb_args;
   char** commandSplit;
+  int trigger_first_white_spaces;
 
   //COUNT NB_ARGS
-  for (i_one = 0, nb_args = 1; commandLine[i_one] != '\0'; i_one++)
+  for (i_one = 1; commandLine[i_one] == ' '; i_one++);
+  for (nb_args = 1; commandLine[i_one] != '\0'; i_one++)
   {
-    if (commandLine[i_one] == ' ')
-      if (commandLine[i_one + 1] != ' ')
+   if (commandLine[i_one] == ' ')
+      if (commandLine[i_one + 1] != ' ' && commandLine[i_one + 1] != '\0')
         nb_args++;
   }
   //FIRST MALLOC WITH NB_ARGS
@@ -76,6 +121,8 @@ char** split_cmd(char* commandLine)
     if (commandSplit[i_one] == NULL)
       return (0);
   }
+  //CHANGED ADDING trigger_first_white_spaces
+  trigger_first_white_spaces = 0;
   //MASTER LOOP, EACH SUB ARRAY GET HIS STRING
   for (i_one = 0, i_two = 0, i_three = 0; commandLine[i_one] != '\0'; i_one++)
   {
@@ -84,50 +131,66 @@ char** split_cmd(char* commandLine)
       commandSplit[i_two][i_three] = commandLine[i_one];
       //my_printf(" indicateur ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_three++;
+      trigger_first_white_spaces = 1;
     }
-    else if (commandLine[i_one + 1] != ' ')
+    else if (commandLine[i_one] == ' ')
     {
-      commandSplit[i_two][i_three] = '\0';
-      i_two++;
-      i_three = 0;
-    }
-    else if (commandLine[i_one + 1] == ' ')
-    {
-      commandSplit[i_two][i_three] = '\0';
-      i_two++;
-      i_three = 0;
+      if (trigger_first_white_spaces == 1)
+      {
+        commandSplit[i_two][i_three] = '\0';
+        i_two++;
+        i_three = 0;
+        trigger_first_white_spaces = 0;
+      }
       for (; commandLine[i_one] == ' '; i_one++);
       i_one--;
     }
   }
-  commandSplit[i_two][i_three] = '\0';
-  //FUNCTION clean_space
-  commandSplit[i_two + 1] = NULL;
+  if (trigger_first_white_spaces == 1)
+  {
+    commandSplit[i_two][i_three] = '\0';
+    //FUNCTION clean_space
+    commandSplit[i_two + 1] = NULL;
+  }
+  else
+  {
+    commandSplit[i_two] = NULL;
+  }
   free(array_count);
   return (commandSplit);
 }
-
+//CHANGED ADDING trigger_first_white_spaces
 int* count_char(char* commandLine, int nb_args)
 {
   int i;
   int counter;
   int* array_count;
+  int trigger_first_white_spaces;
 
   array_count = malloc(nb_args * sizeof(int));
-  for (i = 0, counter = 0, nb_args = 0; commandLine[i] != '\0'; i++, counter++)
+  trigger_first_white_spaces = 0;
+  for (i = 0, counter = 1, nb_args = 0; commandLine[i] != '\0'; i++, counter++)
   {
-        if (commandLine[i] == ' ')
-        {
-          for (; commandLine[i] == ' '; i++);
-          i--;
-          array_count[nb_args] = counter + 1;
-          counter = 0;
-          nb_args++;
-        }
-        else if (commandLine[i + 1] == '\0')
-        {
-          array_count[nb_args] = counter + 1;
-        }
+    if (commandLine[i] == ' ')
+    {
+      for (; commandLine[i] == ' '; i++);
+      i--;
+      if (trigger_first_white_spaces == 1)
+      {
+        array_count[nb_args] = counter;
+        counter = 0;
+        nb_args++;
+      }
+      else
+      {
+        counter = 0;
+      }
+    }
+    else if (commandLine[i + 1] == '\0')
+    {
+      array_count[nb_args] = counter + 1;
+    }
+    trigger_first_white_spaces = 1;
   }
   return (array_count);
 }

@@ -42,8 +42,8 @@ bool              prompt_init()
   char            *cmd;
   t_cmd_list      *cmd_current;
   t_cmd_list      *cmd_list;
-
   is_success = true;
+
   while (1)
   {
     prompt_show();
@@ -66,18 +66,17 @@ bool              prompt_init()
       {
         if (cmd_current->is_piped)
         {
-          cmd_current = pipeline(cmd_current, STDIN_FILENO);
+          cmd_current = pipeline(cmd_current, -1);
         }
         else
         {
-          my_printf("normal call for cmd = %s\n", cmd_current->cmd);
           parser(cmd_current->cmd);
         }
         cmd_current = cmd_current->next;
       }
     }
-    free(cmd);
   }
+  free(cmd);
   return (is_success);
 }
 
@@ -122,7 +121,7 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
       {
         return (NULL);
       }
-      my_strncpy(cmd_list_item->cmd, tmp, first_special_symbol->position);
+      my_strncpy(cmd_list_item->cmd, tmp, (first_special_symbol->position));
       tmp = (tmp + first_special_symbol->position + my_strlen(first_special_symbol->string));
     }
     cmd_list = prompt_cmd_list_add_item(cmd_list, cmd_list_item);

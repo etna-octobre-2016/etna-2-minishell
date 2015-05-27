@@ -1,6 +1,7 @@
 #include "headers/bin_caller.h"
 #include "headers/parser.h"
 #include "headers/path_handler.h"
+#include "headers/env.h"
 #include "../lib/my/src/headers/my.h"
 #include <unistd.h>
 #include <stdlib.h>
@@ -14,9 +15,10 @@ int    bin_caller(char *commandSplit[])
 {
   int ret;
   int pid;
-  char* env[] = {NULL};
+  char **env;
   char* bin_to_exec;
 
+  env = env_get_array();
   if (my_strstr(commandSplit[0], "./") == 0)
   //SEARCH AND ADD PATH BEFORE EXEC BIN
     bin_to_exec = set_path_to_bin(commandSplit[0]);
@@ -42,7 +44,6 @@ int    bin_caller(char *commandSplit[])
   {
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
       free(bin_to_exec);
-    ret = 0;
   }
   return (ret);
 }
