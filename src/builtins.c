@@ -1,7 +1,5 @@
 #include "headers/builtins.h"
 
-#include <stdio.h> // @todo: remove
-
 int   builtin_cd(char **commandSplit)
 {
   int ret;
