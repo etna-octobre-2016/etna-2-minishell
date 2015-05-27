@@ -7,97 +7,25 @@
 #include "headers/path_handler.h"
 #include "headers/env.h"
 #include "headers/parser.h"
+#include "headers/builtins.h"
 
 int parser(char* commandLine)
 {
   //Minded : 'nohup' must only be found at the begining of commandLine
-  int catch_error;
   char** commandSplit;
-  char* cwd;
-  char buff[128];
+  int builtin_ret;
 
-  cwd = NULL;
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
-  //CHANGED Update my_strstr for my_strcmp
-  //handle $PATH
-  if (my_strstr(commandSplit[0], "path") != 0)
-  {
-    path_handler(commandSplit);
-    free_array(commandSplit);
-    return (0);
-  }
-  // CHANGE DIRECTORY
-  else if (my_strcmp(commandSplit[0], "cd") == 0)
-  {
-      if (commandSplit[1] != NULL)
-      {
-        catch_error = chdir(commandSplit[1]);
-      }
-      else
-      {
-        catch_error = -1;
-      }
-      if (catch_error == -1)
-      {
-        perror(commandSplit[0]);
-      }
-      free_array(commandSplit);
-      return (catch_error);
-  }
-  else if (my_strcmp(commandSplit[0], "pwd") == 0)
-  {
-    cwd = getcwd(buff, (sizeof(char) * 128));
-    my_printf("%s\n", cwd);
-    return (1);
-  }
-  // ENV VARIABLES SET
-  else if (my_strcmp(commandSplit[0], "unsetenv") == 0)
-  {
-    if (commandSplit[1] != NULL)
-    {
-      env_unset_var(commandSplit[1]);
-      return (1);
-    }
-    else
-    {
-      return (-1);
-    }
-  }
-  // ENV VARIABLES SET
-  else if (my_strcmp(commandSplit[0], "setenv") == 0)
-  {
-    if (commandSplit[1] != NULL) //&& commandSplit[2] != NULL)
-    {
-      env_set_var(commandSplit[1], commandSplit[2]);
-      return (1);
-    }
-    else
-    {
-      return (-1);
-    }
-  }
-  // ENV VARIABLES PRINT
-  else if (my_strcmp(commandSplit[0], "env") == 0)
-  {
-    if (commandSplit[1] != NULL)
-    {
-      env_print_var(commandSplit[1]);
-    }
-    else
-    {
-      env_print_var(NULL);
-    }
-    return (1);
-  }
-  else
+  builtin_ret = builtin_handle(commandSplit);
+  if (builtin_ret == BUILTIN_UNKNOWN)
   {
     //EXECUTE BIN WITH SPLITED COMMAND
     bin_caller(commandSplit);
-    //FREE MULTIDIM ARRAY
-    free_array(commandSplit);
-    return (1);
   }
+  //FREE MULTIDIM ARRAY
+  free_array(commandSplit);
+  return (1);
 }
 
 char** split_cmd(char* commandLine)
