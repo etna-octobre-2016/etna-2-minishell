@@ -10,6 +10,7 @@ void path_handler(char** commandSplit)
       {"add_path", add_path},
       {"del_path", del_path},
       {"path", show_path},
+      {"--help", show_path_helper},
       {0,0}
     };
   int i;
@@ -18,9 +19,9 @@ void path_handler(char** commandSplit)
   for (i = 0; tabFunc[i].action != 0; i++)
   {
     if (my_strcmp(commandSplit[0], tabFunc[i].action) == 0)
-	    {
-	       tabFunc[i].ptr(commandSplit[1]);
-	    }
+	  {
+      tabFunc[i].ptr(commandSplit[1]);
+	  }
   }
 }
 
@@ -71,12 +72,14 @@ int del_path(char* path)
   s_path* entity;
   s_path* buffEntity;
   int trigger;
+  char* cleaned_path;
 
+  cleaned_path = cleaner_path(path);
   trigger = 0;
   entity = s_initChain->first;
   while (entity != NULL)
   {
-    if (my_strcmp(entity->path, path) == 0)
+    if (my_strcmp(entity->path, cleaned_path) == 0)
     {
       if (trigger == 0)
       {
@@ -90,6 +93,7 @@ int del_path(char* path)
         buffEntity->next = entity->next;
         my_printf("%s removed from $PATH.\n", entity->path);
         free(entity);
+        free(cleaned_path);
         return (0);
       }
     }
@@ -98,6 +102,7 @@ int del_path(char* path)
     entity = entity->next;
   }
   my_printf("%s not found on $PATH.\n", path);
+  free(cleaned_path);
   return (0);
 }
 
@@ -115,10 +120,18 @@ int free_chain_path(s_listChain* list)
   return (0);
 }
 
-int show_path()
+int show_path(char* commandSplit)
 {
   s_path* entity;
 
+  if (commandSplit != NULL)
+  {
+    if (my_strcmp(commandSplit, "--help") == 0)
+    {
+      show_path_helper();
+      return (0);
+    }
+  }
   entity = s_initChain->first;
   my_printf("$PATH=================\n");
   while (entity != NULL)
@@ -129,6 +142,12 @@ int show_path()
     my_printf("=====================>\n");
     return (0);
 }
+
+int show_path_helper()
+  {
+    my_printf("Utilisation :\nPermet d'ajouter ou de supprimer facilement des chemins dans votre variable d'environnement $PATH.\n-add_path /usr/bin      Permet d'ajouter /usr/bin au $PATH\n-del_path /usr/bin      Permet de supprimer /usr/bin au $PATH\n-path                   Permet d'afficher tous les chemins de votre $PATH\n");
+    return (0);
+  }
 
 s_path* search_chain(char* valueToSearch)
 {
