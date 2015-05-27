@@ -37,6 +37,7 @@ int         builtin_handle(char **commandSplit)
     {"cd", builtin_cd},
     {"env", builtin_env},
     {"path", builtin_path},
+    {"pwd", builtin_pwd},
     {"setenv", builtin_setenv},
     {"unsetenv", builtin_unsetenv},
     {NULL,NULL}
@@ -59,6 +60,26 @@ int   builtin_path(char **commandSplit)
 
   ret = 0;
   printf("builtin = path, cmd = %s\n", commandSplit[0]);
+  return (ret);
+}
+int     builtin_pwd(char **commandSplit)
+{
+  char  buff[128];
+  char  *cwd;
+  int   ret;
+
+  UNUSED(commandSplit);
+  ret = BUILTIN_SUCCESS;
+  cwd = getcwd(buff, (sizeof(char) * 128));
+  if (cwd != NULL)
+  {
+    my_printf("%s\n", cwd);
+  }
+  else
+  {
+    ret = BUILTIN_ERROR;
+    perror("pwd");
+  }
   return (ret);
 }
 int   builtin_setenv(char **commandSplit)

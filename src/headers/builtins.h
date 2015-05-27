@@ -19,6 +19,12 @@
 
 
   ///////////////////////////////////////////////////////
+  // CONSTANTS
+  ///////////////////////////////////////////////////////
+  #define UNUSED(var) var = var
+
+
+  ///////////////////////////////////////////////////////
   // STRUCTURES
   ///////////////////////////////////////////////////////
   struct s_builtin
@@ -41,6 +47,7 @@
   int builtin_env(char **commandSplit);
   int builtin_handle(char **commandSplit);
   int builtin_path(char **commandSplit);
+  int builtin_pwd(char **commandSplit);
   int builtin_setenv(char **commandSplit);
   int builtin_unsetenv(char **commandSplit);
 
