@@ -17,6 +17,7 @@
   #define BUILTIN_UNKNOWN 0
   #define BUILTIN_SUCCESS 1
   #define BUILTIN_ERROR   2
+  #define BUILTIN_EXIT    3
 
 
   ///////////////////////////////////////////////////////
@@ -46,6 +47,7 @@
   ///////////////////////////////////////////////////////
   int builtin_cd(char **commandSplit);
   int builtin_env(char **commandSplit);
+  int builtin_exit(char **commandSplit);
   int builtin_handle(char **commandSplit);
   int builtin_path(char **commandSplit);
   int builtin_path_add(char **commandSplit);

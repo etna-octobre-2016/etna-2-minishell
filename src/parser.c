@@ -25,7 +25,7 @@ int parser(char* commandLine)
   }
   //FREE MULTIDIM ARRAY
   free_array(commandSplit);
-  return (1);
+  return (builtin_ret);
 }
 
 char** split_cmd(char* commandLine)

@@ -29,6 +29,11 @@ int   builtin_env(char **commandSplit)
   }
   return (BUILTIN_SUCCESS);
 }
+int   builtin_exit(char **commandSplit)
+{
+  UNUSED(commandSplit);
+  return (BUILTIN_EXIT);
+}
 int         builtin_handle(char **commandSplit)
 {
   int       i;
@@ -38,6 +43,7 @@ int         builtin_handle(char **commandSplit)
     {"cd", builtin_cd},
     {"del_path", builtin_path_del},
     {"env", builtin_env},
+    {"exit", builtin_exit},
     {"path", builtin_path},
     {"pwd", builtin_pwd},
     {"setenv", builtin_setenv},
