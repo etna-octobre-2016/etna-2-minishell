@@ -36,6 +36,7 @@
   int add_path(char* path);
   int del_path(char* path);
   int show_path();
+  int show_path_helper();
   s_path* search_chain(char* valueToSearch);
   char* cleaner_path(char* path_to_clean);
   int free_chain_path(s_listChain* list);

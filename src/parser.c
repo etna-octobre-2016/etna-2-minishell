@@ -13,7 +13,10 @@ int parser(char* commandLine)
   //Minded : 'nohup' must only be found at the begining of commandLine
   int catch_error;
   char** commandSplit;
+  char* cwd;
+  char buff[128];
 
+  cwd = NULL;
   //SPLIT USER COMMAND FOR EXECVE
   commandSplit = split_cmd(commandLine);
   //CHANGED Update my_strstr for my_strcmp
@@ -41,6 +44,12 @@ int parser(char* commandLine)
       }
       free_array(commandSplit);
       return (catch_error);
+  }
+  else if (my_strcmp(commandSplit[0], "pwd") == 0)
+  {
+    cwd = getcwd(buff, (sizeof(char) * 128));
+    my_printf("%s\n", cwd);
+    return (1);
   }
   // ENV VARIABLES SET
   else if (my_strcmp(commandSplit[0], "unsetenv") == 0)

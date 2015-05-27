@@ -20,6 +20,8 @@
   struct              s_cmd_list
   {
     bool              is_piped;
+    bool              is_redirect_input;
+    bool              is_redirect_output;
     char              *cmd;
     struct s_cmd_list *prev;
     struct s_cmd_list *next;
@@ -27,6 +29,8 @@
   struct              s_symbol_match
   {
     bool              is_pipe;
+    bool              is_redirect_input;
+    bool              is_redirect_output;
     int               position;
     char              *string;
   };
