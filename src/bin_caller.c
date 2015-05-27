@@ -1,15 +1,15 @@
-#include "headers/bin_caller.h"
-#include "headers/parser.h"
-#include "headers/path_handler.h"
-#include "headers/env.h"
-#include "../lib/my/src/headers/my.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include "../lib/my/src/headers/my.h"
+#include "headers/env.h"
+#include "headers/path_handler.h"
+#include "headers/parser.h"
+#include "headers/bin_caller.h"
 
 int    bin_caller(char *commandSplit[])
 {

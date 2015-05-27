@@ -5,6 +5,7 @@
 #include "headers/parser.h"
 #include "headers/pipeline.h"
 #include "headers/prompt.h"
+#include "headers/redirections.h"
 
 t_cmd_list        *prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
 {
@@ -34,6 +35,8 @@ t_cmd_list        *prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_it
 void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
 {
   cmd->is_piped = symbol->is_pipe;
+  cmd->is_redirect_input = symbol->is_redirect_input;
+  cmd->is_redirect_output = symbol->is_redirect_output;
 }
 
 bool              prompt_init()
@@ -68,6 +71,10 @@ bool              prompt_init()
         {
           cmd_current = pipeline(cmd_current, -1);
         }
+        else if ((cmd_current->is_redirect_input) || (cmd_current->is_redirect_output))
+        {
+          cmd_current = redirections(cmd_current);
+        }
         else
         {
           parser(cmd_current->cmd);
@@ -75,8 +82,8 @@ bool              prompt_init()
         cmd_current = cmd_current->next;
       }
     }
+    free(cmd);
   }
-  free(cmd);
   return (is_success);
 }
 
@@ -144,6 +151,8 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
   }
   // @note: setting default values
   symbol->is_pipe = false;
+  symbol->is_redirect_input = false;
+  symbol->is_redirect_output = false;
   symbol->position = -1;
   symbol->string = NULL;
   current_position = -1;
@@ -162,6 +171,14 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
     if (my_strcmp(symbol->string, "|") == 0)
     {
       symbol->is_pipe = true;
+    }
+    if (my_strcmp(symbol->string, "<") == 0)
+    {
+      symbol->is_redirect_input = true;
+    }
+    if (my_strcmp(symbol->string, ">") == 0)
+    {
+      symbol->is_redirect_output = true;
     }
   }
   return (symbol);

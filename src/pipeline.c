@@ -3,6 +3,7 @@
 #include "headers/pipeline.h"
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
+#include "headers/redirections.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,11 +31,16 @@ t_cmd_list *pipeline(t_cmd_list *cmd, int input)
       dup2(input, STDIN_FILENO);
       close(input);
     }
-    if (pipe_var[1] != -1)
+    if (pipe_var[1] != -1 && !cmd->is_redirect_output)
     {
       // my_printf("Child : pipe_var[1] != -1 : cmd : %s\n",cmd->cmd);
       dup2(pipe_var[1], STDOUT_FILENO);
       close(pipe_var[1]);
+    }
+    if (cmd->is_redirect_output)
+    {
+      cmd = redirections(cmd);
+      exit(0);
     }
     if (pipe_var[0] != -1)
     {
@@ -59,7 +65,7 @@ t_cmd_list *pipeline(t_cmd_list *cmd, int input)
       // my_printf("Parent : pipe_var[1] != -1 : cmd : %s\n",cmd->cmd);
       close(pipe_var[1]);
     }
-    if (cmd->next != NULL)
+    if (cmd->next != NULL && !cmd->is_redirect_output)
     {
       cmd = cmd->next;
       // my_printf("Parent : Next cmd  : cmd : %s\n",cmd->cmd);
@@ -67,5 +73,7 @@ t_cmd_list *pipeline(t_cmd_list *cmd, int input)
     }
   }
   // my_printf("Return cmd : %s\n",cmd->cmd);
+  if (cmd->is_redirect_output)
+    cmd = cmd->next;
   return (cmd);
 }
