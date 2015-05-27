@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "../lib/my/src/headers/my.h"
+#include "headers/builtins.h"
 #include "headers/parser.h"
 #include "headers/pipeline.h"
 #include "headers/prompt.h"
@@ -41,13 +42,17 @@ void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
 
 bool              prompt_init()
 {
+  bool            is_running;
   bool            is_success;
   char            *cmd;
+  int             parser_ret;
   t_cmd_list      *cmd_current;
   t_cmd_list      *cmd_list;
-  is_success = true;
 
-  while (1)
+  is_running = true;
+  is_success = true;
+  parser_ret = 0;
+  while (is_running)
   {
     prompt_show();
     cmd = prompt_cmd_read();
@@ -77,12 +82,16 @@ bool              prompt_init()
         }
         else
         {
-          parser(cmd_current->cmd);
+          parser_ret = parser(cmd_current->cmd);
         }
         cmd_current = cmd_current->next;
       }
     }
     free(cmd);
+    if (parser_ret == BUILTIN_EXIT)
+    {
+      is_running = false;
+    }
   }
   return (is_success);
 }
