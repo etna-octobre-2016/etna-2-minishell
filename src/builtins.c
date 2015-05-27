@@ -19,11 +19,15 @@ int   builtin_cd(char **commandSplit)
 }
 int   builtin_env(char **commandSplit)
 {
-  int ret;
-
-  ret = 0;
-  printf("builtin = env, cmd = %s\n", commandSplit[0]);
-  return (ret);
+  if (commandSplit[1] != NULL)
+  {
+    env_print_var(commandSplit[1]);
+  }
+  else
+  {
+    env_print_var(NULL);
+  }
+  return (BUILTIN_SUCCESS);
 }
 int         builtin_handle(char **commandSplit)
 {
