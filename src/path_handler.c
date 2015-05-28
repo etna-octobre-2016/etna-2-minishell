@@ -3,26 +3,6 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/path_handler.h"
 
-void          path_handler(char** commandSplit)
-{
-  int         i;
-  t_list_func tab_func[] = {
-    {"add_path", add_path},
-    {"del_path", del_path},
-    {"path", show_path},
-    {"--help", show_path_helper},
-    {0,0}
-  };
-
-  for (i = 0; tab_func[i].action != 0; i++)
-  {
-    if (my_strcmp(commandSplit[0], tab_func[i].action) == 0)
-	  {
-      tab_func[i].ptr(commandSplit[1]);
-	  }
-  }
-}
-
 void          path_handler_init()
 {
   t_path*     entity;

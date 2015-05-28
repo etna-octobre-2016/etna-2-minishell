@@ -51,7 +51,6 @@
   int       show_path();
   int       show_path_helper();
   t_path*   search_chain(char* valueToSearch);
-  void      path_handler(char** commandSplit);
   void      path_handler_init();
 
 

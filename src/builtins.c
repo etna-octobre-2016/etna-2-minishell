@@ -71,10 +71,18 @@ int         builtin_handle(char **commandSplit)
 
 int         builtin_path(char **commandSplit)
 {
+  int       i;
   int       ret;
 
-  UNUSED(commandSplit);
   ret = BUILTIN_SUCCESS;
+  for (i = 0; commandSplit[i] != NULL; i++)
+  {
+    if (my_strcmp(commandSplit[i], "--help") == 0)
+    {
+      show_path_helper();
+      return (ret);
+    }
+  }
   if (show_path() != 0)
   {
     ret = BUILTIN_ERROR;
