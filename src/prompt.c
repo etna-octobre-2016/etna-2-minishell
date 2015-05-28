@@ -8,46 +8,14 @@
 #include "headers/prompt.h"
 #include "headers/redirections.h"
 
-t_cmd_list        *prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
-{
-  t_cmd_list      *tmp;
-
-  // if the new_item is the first of the list
-  if (list == NULL)
-  {
-    new_item->next = NULL;
-    new_item->prev = NULL;
-    list = new_item;
-  }
-  else
-  {
-    tmp = list;
-    while (tmp->next != NULL)
-    {
-      tmp = tmp->next;
-    }
-    new_item->prev = tmp;
-    new_item->next = NULL;
-    tmp->next = new_item;
-  }
-  return (list);
-}
-
-void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
-{
-  cmd->is_piped = symbol->is_pipe;
-  cmd->is_redirect_input = symbol->is_redirect_input;
-  cmd->is_redirect_output = symbol->is_redirect_output;
-}
-
 bool              prompt_init()
 {
   bool            is_running;
   bool            is_success;
-  char            *cmd;
+  char*           cmd;
   int             parser_ret;
-  t_cmd_list      *cmd_current;
-  t_cmd_list      *cmd_list;
+  t_cmd_list*     cmd_current;
+  t_cmd_list*     cmd_list;
 
   is_running = true;
   is_success = true;
@@ -96,23 +64,43 @@ bool              prompt_init()
   return (is_success);
 }
 
-void              prompt_show()
-{
-  my_putstr(PROMPT_DEFAULT_STRING);
-}
-
-char              *prompt_cmd_read()
+char*             prompt_cmd_read()
 {
   return my_readline(PROMPT_BUFFER_SIZE);
 }
 
-t_cmd_list        *prompt_cmd_split(char *cmd)
+t_cmd_list*       prompt_cmd_list_add_item(t_cmd_list *list, t_cmd_list *new_item)
+{
+  t_cmd_list*     tmp;
+
+  // if the new_item is the first of the list
+  if (list == NULL)
+  {
+    new_item->next = NULL;
+    new_item->prev = NULL;
+    list = new_item;
+  }
+  else
+  {
+    tmp = list;
+    while (tmp->next != NULL)
+    {
+      tmp = tmp->next;
+    }
+    new_item->prev = tmp;
+    new_item->next = NULL;
+    tmp->next = new_item;
+  }
+  return (list);
+}
+
+t_cmd_list*       prompt_cmd_split(char *cmd)
 {
   bool            is_split_complete;
-  char            *tmp;
-  t_cmd_list      *cmd_list;
-  t_cmd_list      *cmd_list_item;
-  t_symbol_match  *first_special_symbol;
+  char*           tmp;
+  t_cmd_list*     cmd_list;
+  t_cmd_list*     cmd_list_item;
+  t_symbol_match* first_special_symbol;
 
   tmp = cmd;
   cmd_list = NULL;
@@ -146,12 +134,12 @@ t_cmd_list        *prompt_cmd_split(char *cmd)
   return (cmd_list);
 }
 
-t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
+t_symbol_match*   prompt_cmd_find_first_symbol(char *cmd)
 {
-  char            *special_symbols[] = PROMPT_SPECIAL_SYMBOLS;
+  char*           special_symbols[] = PROMPT_SPECIAL_SYMBOLS;
   int             current_position;
   int             i;
-  t_symbol_match  *symbol;
+  t_symbol_match* symbol;
 
   symbol = malloc(sizeof(*symbol));
   if (symbol == NULL)
@@ -191,4 +179,16 @@ t_symbol_match    *prompt_cmd_find_first_symbol(char *cmd)
     }
   }
   return (symbol);
+}
+
+void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
+{
+  cmd->is_piped = symbol->is_pipe;
+  cmd->is_redirect_input = symbol->is_redirect_input;
+  cmd->is_redirect_output = symbol->is_redirect_output;
+}
+
+void              prompt_show()
+{
+  my_putstr(PROMPT_DEFAULT_STRING);
 }
