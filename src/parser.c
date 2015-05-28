@@ -9,65 +9,48 @@
 #include "headers/parser.h"
 #include "headers/builtins.h"
 
-int parser(char* commandLine)
+char**      split_cmd(char* commandLine)
 {
-  //Minded : 'nohup' must only be found at the begining of commandLine
-  char** commandSplit;
-  int builtin_ret;
-
-  //SPLIT USER COMMAND FOR EXECVE
-  commandSplit = split_cmd(commandLine);
-  builtin_ret = builtin_handle(commandSplit);
-  if (builtin_ret == BUILTIN_UNKNOWN)
-  {
-    //EXECUTE BIN WITH SPLITED COMMAND
-    bin_caller(commandSplit);
-  }
-  //FREE MULTIDIM ARRAY
-  free_array(commandSplit);
-  return (builtin_ret);
-}
-
-char** split_cmd(char* commandLine)
-{
-  int i_one;
-  int i_two;
-  int i_three;
-  int* array_count;
-  int nb_args;
-  char** commandSplit;
-  int trigger_first_white_spaces;
+  int       i_one;
+  int       i_two;
+  int       i_three;
+  int*      array_count;
+  int       nb_args;
+  char**    commandSplit;
+  int       trigger_first_white_spaces;
 
   //COUNT NB_ARGS
   for (i_one = 1; commandLine[i_one] == ' '; i_one++);
   for (nb_args = 1; commandLine[i_one] != '\0'; i_one++)
   {
-   if (commandLine[i_one] == ' ')
+    if (commandLine[i_one] == ' ')
+    {
       if (commandLine[i_one + 1] != ' ' && commandLine[i_one + 1] != '\0')
+      {
         nb_args++;
+      }
+    }
   }
-  //FIRST MALLOC WITH NB_ARGS
-  commandSplit = malloc((nb_args + 1) * sizeof(char*));
-  //CALL FUNCTION IN ORDER TO GET THE CHAR* SIZE OF DIFFERENT ARGS
-  array_count = count_char(commandLine, nb_args);
+  commandSplit = malloc((nb_args + 1) * sizeof(char*)); //FIRST MALLOC WITH NB_ARGS
+  array_count = count_char(commandLine, nb_args); //CALL FUNCTION IN ORDER TO GET THE CHAR* SIZE OF DIFFERENT ARGS
   if (commandSplit == NULL)
+  {
     return (0);
-  //MALLOC THE REST OF THE COMMANDSPLIT
-  for (i_one = 0; i_one < nb_args; i_one++)
+  }
+  for (i_one = 0; i_one < nb_args; i_one++) //MALLOC THE REST OF THE COMMANDSPLIT
   {
     commandSplit[i_one] = malloc(sizeof(char) * array_count[i_one] + 1);
     if (commandSplit[i_one] == NULL)
+    {
       return (0);
+    }
   }
-  //CHANGED ADDING trigger_first_white_spaces
-  trigger_first_white_spaces = 0;
-  //MASTER LOOP, EACH SUB ARRAY GET HIS STRING
-  for (i_one = 0, i_two = 0, i_three = 0; commandLine[i_one] != '\0'; i_one++)
+  trigger_first_white_spaces = 0; //CHANGED ADDING trigger_first_white_spaces
+  for (i_one = 0, i_two = 0, i_three = 0; commandLine[i_one] != '\0'; i_one++) //MASTER LOOP, EACH SUB ARRAY GET HIS STRING
   {
     if (commandLine[i_one] != ' ')
     {
       commandSplit[i_two][i_three] = commandLine[i_one];
-      //my_printf(" indicateur ===> commandLine[i_one] = %c split[%d][%d] = %c\n", commandLine[i_one], i_two, i_three, commandSplit[i_two][i_three]);
       i_three++;
       trigger_first_white_spaces = 1;
     }
@@ -97,13 +80,29 @@ char** split_cmd(char* commandLine)
   free(array_count);
   return (commandSplit);
 }
-//CHANGED ADDING trigger_first_white_spaces
-int* count_char(char* commandLine, int nb_args)
+
+int         parser(char* commandLine)
 {
-  int i;
-  int counter;
-  int* array_count;
-  int trigger_first_white_spaces;
+  //Minded : 'nohup' must only be found at the begining of commandLine
+  char**    commandSplit;
+  int       builtin_ret;
+
+  commandSplit = split_cmd(commandLine); //SPLIT USER COMMAND FOR EXECVE
+  builtin_ret = builtin_handle(commandSplit);
+  if (builtin_ret == BUILTIN_UNKNOWN)
+  {
+    bin_caller(commandSplit); //EXECUTE BIN WITH SPLITED COMMAND
+  }
+  free_array(commandSplit); //FREE MULTIDIM ARRAY
+  return (builtin_ret);
+}
+
+int*        count_char(char* commandLine, int nb_args) //CHANGED ADDING trigger_first_white_spaces
+{
+  int       counter;
+  int       i;
+  int       trigger_first_white_spaces;
+  int*      array_count;
 
   array_count = malloc(nb_args * sizeof(int));
   trigger_first_white_spaces = 0;
@@ -133,9 +132,9 @@ int* count_char(char* commandLine, int nb_args)
   return (array_count);
 }
 
-void free_array(char** commandSplit)
+void        free_array(char** commandSplit)
 {
-  int i;
+  int       i;
 
   for (i = 0; commandSplit[i] != NULL; i++)
   {
