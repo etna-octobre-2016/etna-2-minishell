@@ -20,10 +20,10 @@
   ///////////////////////////////////////////////////////
   // STRUCTURES
   ///////////////////////////////////////////////////////
-  struct s_builtin
+  struct    s_builtin
   {
-    char *name;
-    int  (*func)(char **commandSplit);
+    char*   name;
+    int     (*func)(char **commandSplit);
   };
 
 
