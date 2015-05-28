@@ -131,6 +131,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     }
     cmd_list = prompt_cmd_list_add_item(cmd_list, cmd_list_item);
     prompt_cmd_set_flags(cmd_list_item, first_special_symbol);
+    free(first_special_symbol);
   }
   return (cmd_list);
 }
