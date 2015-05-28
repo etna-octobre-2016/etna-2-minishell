@@ -54,6 +54,7 @@
   t_cmd_list*     prompt_cmd_split(char *);
   t_symbol_match* prompt_cmd_find_first_symbol(char *);
   void            prompt_cmd_set_flags(t_cmd_list *, t_symbol_match *);
+  void            prompt_cmd_split_free(t_cmd_list* cmd_list);
   void            prompt_show();
 
 
