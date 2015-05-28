@@ -47,7 +47,6 @@ int       bin_caller(char *commandSplit[])
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
     {
       free(bin_to_exec);
-      free(env);
     }
     return (ret); // PARENT
   }
@@ -56,9 +55,9 @@ int       bin_caller(char *commandSplit[])
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
     {
       free(bin_to_exec);
-      free(env);
     }
   }
+  free(env);
   return (ret);
 }
 

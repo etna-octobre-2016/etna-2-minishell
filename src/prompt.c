@@ -27,6 +27,7 @@ bool              prompt_init()
     if (cmd == NULL)
     {
       is_success = false;
+      free(cmd);
       break;
     }
     if (my_strlen(cmd) > 0)
@@ -54,13 +55,16 @@ bool              prompt_init()
         }
         cmd_current = cmd_current->next;
       }
+      prompt_cmd_split_free(cmd_list);
+    }
+    else
+    {
+      free(cmd);
     }
     if (parser_ret == BUILTIN_EXIT)
     {
       is_running = false;
     }
-    prompt_cmd_split_free(cmd_list);
-    free(cmd);
   }
   return (is_success);
 }
@@ -118,6 +122,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     {
       is_split_complete = true;
       cmd_list_item->cmd = my_strcpy(tmp);
+      free(tmp);
     }
     else
     {
