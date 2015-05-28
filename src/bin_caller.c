@@ -11,27 +11,30 @@
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
 
-int    bin_caller(char *commandSplit[])
+int       bin_caller(char *commandSplit[])
 {
-  int ret;
-  int pid;
-  char **env;
-  char* bin_to_exec;
+  char*   bin_to_exec;
+  char**  env;
+  int     pid;
+  int     ret;
 
   env = env_get_array();
   if (my_strstr(commandSplit[0], "./") == 0)
   {
     if (commandSplit[0][0] == '/')
+    {
       bin_to_exec = commandSplit[0];
+    }
     else
-      //SEARCH AND ADD PATH BEFORE EXEC BIN
-      bin_to_exec = set_path_to_bin(commandSplit[0]);
+    {
+      bin_to_exec = set_path_to_bin(commandSplit[0]); //SEARCH AND ADD PATH BEFORE EXEC BIN
+    }
   }
   else
+  {
     bin_to_exec = commandSplit[0];
-  //FORK INIT
+  }
   pid = fork();
-  //RETURN TEST OF FORK()
   if (pid == -1)
   {
     perror("forking");
@@ -42,35 +45,36 @@ int    bin_caller(char *commandSplit[])
     ret = execve(bin_to_exec, commandSplit, env);// CHILD
     perror(commandSplit[0]); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
+    {
       free(bin_to_exec);
+    }
     return (ret); // PARENT
   }
   if (wait(&ret) >= 0)
   {
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
+    {
       free(bin_to_exec);
+    }
   }
   return (ret);
 }
 
-char* set_path_to_bin(char* bin)
+char*     set_path_to_bin(char* bin)
 {
-  s_path* entity;
-  char* path_to_try;
+  char*   path_to_try;
+  t_path* entity;
 
   path_to_try = NULL;
-  entity = s_initChain->first;
-  //BROWSE LIST
-  while (entity != NULL)
+  entity = g_init_chain->first;
+  while (entity != NULL) //BROWSE LIST
   {
-    //FREE IF ALREADY CONCAT BY MY_STRCONCAT
-    if (path_to_try != NULL)
+    if (path_to_try != NULL) //FREE IF ALREADY CONCAT BY MY_STRCONCAT
     {
       free(path_to_try);
     }
     path_to_try = my_strconcat(entity->path, bin);
-    // TRY ACCESS TO BIN
-    if (access(path_to_try, F_OK) == 0)
+    if (access(path_to_try, F_OK) == 0) // TRY ACCESS TO BIN
     {
       return (path_to_try);
     }
@@ -82,52 +86,62 @@ char* set_path_to_bin(char* bin)
   return (path_to_try);
 }
 
-char* she_banging(char* commandLine)
+char*     she_banging(char* commandLine)
 {
-  int i_one;
-  int i_two;
-  int trigger;
-  int arg_size;
-  char* bin_name;
-  char* bin_name_cleaned;
+  char*   bin_name;
+  char*   bin_name_cleaned;
+  int     arg_size;
+  int     i_one;
+  int     i_two;
+  int     trigger;
 
   //REPARSE COMMANDSPLIT
   for (arg_size = 0, trigger = 0, i_one = 2, i_two = 0; trigger == 0; i_one++, arg_size++)
   {
     if (commandLine[i_one] == ' ' || commandLine[i_one] == '\0')
+    {
       trigger = 1;
+    }
   }
   bin_name = malloc(sizeof(char) * arg_size);
+
   //ELIMINATE "./"
   for (trigger = 0, i_one = 2, i_two = 0; trigger == 0; i_one++, i_two++)
   {
     if (commandLine[i_one] == ' ' || commandLine[i_one] == '\0')
+    {
       trigger = 1;
+    }
     bin_name[i_two] = commandLine[i_one];
   }
   bin_name_cleaned = get_bin(bin_name, 0);
   if (bin_name_cleaned == NULL)
+  {
     return (NULL);
-  //REWRITE COMMANDLINE
-  commandLine = rewrite_command(commandLine, bin_name_cleaned);
+  }
+  commandLine = rewrite_command(commandLine, bin_name_cleaned); //REWRITE COMMANDLINE
   free(bin_name);
   return (commandLine);
 }
 
-char* get_bin(char* bin_name, int opt)
+char*     get_bin(char* bin_name, int opt)
 {
-  int file;
-  int i_one;
-  int trigger;
-  char* buffer;
-  char* bin_name_cleaned;
+  char*   bin_name_cleaned;
+  char*   buffer;
+  int     file;
+  int     i_one;
+  int     trigger;
 
   file = open(bin_name, O_RDONLY | O_NONBLOCK);
   if (file == -1)
+  {
     return (NULL);
+  }
   buffer = malloc(sizeof(char));
   if (opt != 0)
+  {
     bin_name_cleaned = malloc(sizeof(char) * (opt + 1));
+  }
   read(file, buffer, 1);
   trigger = 0;
   while (buffer[0] != '\n')
@@ -140,7 +154,9 @@ char* get_bin(char* bin_name, int opt)
     else if (trigger == 1)
     {
       if (opt == 0)
+      {
         i_one++;
+      }
       else if (buffer[0] != '\n')
       {
         bin_name_cleaned[i_one] = buffer[0];
@@ -154,7 +170,9 @@ char* get_bin(char* bin_name, int opt)
   free(buffer);
   close(file);
   if (opt == 0)
+  {
     return (get_bin(bin_name, i_one));
+  }
   else
   {
     bin_name_cleaned[i_one] = '\0';
@@ -162,30 +180,34 @@ char* get_bin(char* bin_name, int opt)
   }
 }
 
-char* rewrite_command(char* commandLine, char* bin_name_cleaned)
+char*     rewrite_command(char* commandLine, char* bin_name_cleaned)
 {
-  int i_one;
-  int i_two;
-  int len_total;
-  int len_bin;
-  int len_bin_cleaned;
-  char* new_commandLine;
+  char*   new_commandLine;
+  int     i_one;
+  int     i_two;
+  int     len_bin;
+  int     len_bin_cleaned;
+  int     len_total;
 
   len_total = my_strlen(commandLine);
   len_bin = my_strlen("./");
   len_bin_cleaned = my_strlen(bin_name_cleaned);
-  //CALCULATING NEW COMMANDLINE SIZE FOR MALLOC
-  len_total = (len_total - (len_bin - len_bin_cleaned)) + 2;
-  //MALLOC SIZE OF LEN_TOTAL
-  new_commandLine = malloc(sizeof(char) * len_total);
+  len_total = (len_total - (len_bin - len_bin_cleaned)) + 2; //CALCULATING NEW COMMANDLINE SIZE FOR MALLOC
+  new_commandLine = malloc(sizeof(char) * len_total); //MALLOC SIZE OF LEN_TOTAL
+
   //BEGIN LOOP CREATION NEW COMMANDLINE
-    //FIRST ADDIND BIN NAME CLEANED
+  //FIRST ADDIND BIN NAME CLEANED
   for (i_one = 0, i_two = 0; bin_name_cleaned[i_two] != '\0'; i_one++, i_two++)
+  {
     new_commandLine[i_one] = bin_name_cleaned[i_two];
+  }
   new_commandLine[i_one] = ' ';
-    //ADDING THE REST OF ARG
+
+  //ADDING THE REST OF ARG
   for (i_one += 1, i_two = 2; commandLine[i_two] != '\0'; i_one++, i_two++)
+  {
     new_commandLine[i_one] = commandLine[i_two];
+  }
   new_commandLine[i_one] = '\0';
   return (new_commandLine);
 }

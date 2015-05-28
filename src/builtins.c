@@ -1,8 +1,13 @@
+#include <stdio.h>
+#include <unistd.h>
+#include "../lib/my/src/headers/my.h"
+#include "headers/env.h"
+#include "headers/path_handler.h"
 #include "headers/builtins.h"
 
-int   builtin_cd(char **commandSplit)
+int         builtin_cd(char **commandSplit)
 {
-  int ret;
+  int       ret;
 
   ret = BUILTIN_SUCCESS;
   if (commandSplit[1] == NULL || chdir(commandSplit[1]) == -1)
@@ -15,7 +20,8 @@ int   builtin_cd(char **commandSplit)
   }
   return (ret);
 }
-int   builtin_env(char **commandSplit)
+
+int         builtin_env(char **commandSplit)
 {
   if (commandSplit[1] != NULL)
   {
@@ -27,11 +33,13 @@ int   builtin_env(char **commandSplit)
   }
   return (BUILTIN_SUCCESS);
 }
-int   builtin_exit(char **commandSplit)
+
+int         builtin_exit(char **commandSplit)
 {
   UNUSED(commandSplit);
   return (BUILTIN_EXIT);
 }
+
 int         builtin_handle(char **commandSplit)
 {
   int       i;
@@ -60,9 +68,10 @@ int         builtin_handle(char **commandSplit)
   }
   return (ret);
 }
-int   builtin_path(char **commandSplit)
+
+int         builtin_path(char **commandSplit)
 {
-  int ret;
+  int       ret;
 
   UNUSED(commandSplit);
   ret = BUILTIN_SUCCESS;
@@ -72,9 +81,10 @@ int   builtin_path(char **commandSplit)
   }
   return (ret);
 }
-int builtin_path_add(char **commandSplit)
+
+int         builtin_path_add(char **commandSplit)
 {
-  int ret;
+  int       ret;
 
   ret = BUILTIN_SUCCESS;
   if (commandSplit[1] == NULL || add_path(commandSplit[1]) != 0)
@@ -83,9 +93,10 @@ int builtin_path_add(char **commandSplit)
   }
   return (ret);
 }
-int builtin_path_del(char **commandSplit)
+
+int         builtin_path_del(char **commandSplit)
 {
-  int ret;
+  int       ret;
 
   ret = BUILTIN_SUCCESS;
   if (commandSplit[1] == NULL || del_path(commandSplit[1]) != 0)
@@ -94,11 +105,12 @@ int builtin_path_del(char **commandSplit)
   }
   return (ret);
 }
-int     builtin_pwd(char **commandSplit)
+
+int         builtin_pwd(char **commandSplit)
 {
-  char  buff[128];
-  char  *cwd;
-  int   ret;
+  char      buff[128];
+  char*     cwd;
+  int       ret;
 
   UNUSED(commandSplit);
   ret = BUILTIN_SUCCESS;
@@ -114,7 +126,8 @@ int     builtin_pwd(char **commandSplit)
   }
   return (ret);
 }
-int   builtin_setenv(char **commandSplit)
+
+int         builtin_setenv(char **commandSplit)
 {
   if (commandSplit[1] != NULL && commandSplit[2] != NULL)
   {
@@ -123,7 +136,8 @@ int   builtin_setenv(char **commandSplit)
   }
   return (BUILTIN_ERROR);
 }
-int   builtin_unsetenv(char **commandSplit)
+
+int         builtin_unsetenv(char **commandSplit)
 {
   if (commandSplit[1] != NULL)
   {
