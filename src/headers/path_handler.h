@@ -1,44 +1,58 @@
 #ifndef IRONSH_PATH_HANDLER_H
 #define IRONSH_PATH_HANDLER_H
-#define ENV_ARG_PATH "/bin/"
 
-  ///////////////////////////////////////////////////////
-  // structure
-  ///////////////////////////////////////////////////////
-  typedef struct s_path s_path;
-  struct s_path
-  {
-    char* path;
-    s_path *next;
-  };
 
-  typedef struct s_listChain
-  {
-    s_path *first;
-  }s_listChain;
-
-  typedef struct structFunction
-  {
-    char *action;
-    int (*ptr)(char*);
-  }t_listFunc;
   ///////////////////////////////////////////////////////
   // CONSTANTS
   ///////////////////////////////////////////////////////
-  s_listChain* s_initChain;
+  #define ENV_ARG_PATH "/bin/"
+
+
+  ///////////////////////////////////////////////////////
+  // STRUCTURES
+  ///////////////////////////////////////////////////////
+  struct            s_path
+  {
+    char*           path;
+    struct s_path*  next;
+  };
+  struct            s_listChain
+  {
+    struct s_path*  first;
+  };
+  struct            s_function
+  {
+    char*           action;
+    int             (*ptr)(char*);
+  };
+
+
+  ///////////////////////////////////////////////////////
+  // STRUCTURES
+  ///////////////////////////////////////////////////////
+  typedef struct s_path t_path;
+  typedef struct s_listChain t_list_chain;
+  typedef struct s_function t_list_func;
+
+
+  ///////////////////////////////////////////////////////
+  // GLOBALS
+  ///////////////////////////////////////////////////////
+  t_list_chain* g_init_chain;
 
 
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
-  void path_handler(char** commandSplit);
-  void path_handler_init();
-  int add_path(char* path);
-  int del_path(char* path);
-  int show_path();
-  int show_path_helper();
-  s_path* search_chain(char* valueToSearch);
-  char* cleaner_path(char* path_to_clean);
-  int free_chain_path(s_listChain* list);
+  char*     cleaner_path(char* path_to_clean);
+  int       add_path(char* path);
+  int       del_path(char* path);
+  int       free_chain_path(t_list_chain* list);
+  int       show_path();
+  int       show_path_helper();
+  t_path*   search_chain(char* valueToSearch);
+  void      path_handler(char** commandSplit);
+  void      path_handler_init();
+
 
 #endif

@@ -63,10 +63,10 @@ int       bin_caller(char *commandSplit[])
 char*     set_path_to_bin(char* bin)
 {
   char*   path_to_try;
-  s_path* entity;
+  t_path* entity;
 
   path_to_try = NULL;
-  entity = s_initChain->first;
+  entity = g_init_chain->first;
   while (entity != NULL) //BROWSE LIST
   {
     if (path_to_try != NULL) //FREE IF ALREADY CONCAT BY MY_STRCONCAT

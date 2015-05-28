@@ -14,7 +14,7 @@ int   main()
   {
     ret = EXIT_FAILURE;
   }
-  free_chain_path(s_initChain);
+  free_chain_path(g_init_chain);
   env_free_list();
   return (ret);
 }
