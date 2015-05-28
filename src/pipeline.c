@@ -6,7 +6,6 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/bin_caller.h"
 #include "headers/parser.h"
-#include "headers/prompt.h"
 #include "headers/redirections.h"
 #include "headers/pipeline.h"
 

@@ -5,8 +5,8 @@
 #include "headers/builtins.h"
 #include "headers/parser.h"
 #include "headers/pipeline.h"
-#include "headers/prompt.h"
 #include "headers/redirections.h"
+#include "headers/prompt.h"
 
 bool              prompt_init()
 {

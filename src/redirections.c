@@ -8,7 +8,6 @@
 #include "../lib/my/src/headers/my.h"
 #include "headers/bin_caller.h"
 #include "headers/parser.h"
-#include "headers/prompt.h"
 #include "headers/redirections.h"
 
 t_cmd_list*     redirections(t_cmd_list* cmd)
