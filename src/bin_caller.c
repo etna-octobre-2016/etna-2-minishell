@@ -10,6 +10,7 @@
 #include "headers/path_handler.h"
 #include "headers/parser.h"
 #include "headers/bin_caller.h"
+#include "headers/error_handler.h"
 
 int       bin_caller(char *commandSplit[])
 {
@@ -37,13 +38,13 @@ int       bin_caller(char *commandSplit[])
   pid = fork();
   if (pid == -1)
   {
-    perror("forking");
+    error_handler("forking");
     ret = -1;
   }
   if (pid == 0)
   {
     ret = execve(bin_to_exec, commandSplit, env);// CHILD
-    perror(commandSplit[0]); // ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
+    error_handler(commandSplit[0]);//ONLY HAPPENS WHEN EXECVE FAIL ! // PARENT
     if (my_strlen(bin_to_exec) != my_strlen(commandSplit[0]))
     {
       free(bin_to_exec);

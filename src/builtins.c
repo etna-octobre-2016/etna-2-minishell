@@ -4,6 +4,7 @@
 #include "headers/env.h"
 #include "headers/path_handler.h"
 #include "headers/builtins.h"
+#include "headers/error_handler.h"
 
 int         builtin_cd(char **commandSplit)
 {
@@ -16,7 +17,7 @@ int         builtin_cd(char **commandSplit)
   }
   if (ret == BUILTIN_ERROR)
   {
-    perror(commandSplit[0]);
+    error_handler(commandSplit[0]);
   }
   return (ret);
 }
@@ -130,7 +131,7 @@ int         builtin_pwd(char **commandSplit)
   else
   {
     ret = BUILTIN_ERROR;
-    perror("pwd");
+    error_handler("pwd");
   }
   return (ret);
 }
