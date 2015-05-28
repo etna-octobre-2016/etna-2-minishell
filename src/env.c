@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include "../lib/my/src/headers/my.h"
 #include "headers/env.h"
 
 static t_env_variable *g_env_variable = NULL;

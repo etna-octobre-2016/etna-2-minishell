@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <unistd.h>
+#include "../lib/my/src/headers/my.h"
+#include "headers/env.h"
+#include "headers/path_handler.h"
 #include "headers/builtins.h"
 
 int   builtin_cd(char **commandSplit)
