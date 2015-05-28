@@ -59,8 +59,8 @@ bool              prompt_init()
     {
       is_running = false;
     }
-    free(cmd);
     prompt_cmd_split_free(cmd_list);
+    free(cmd);
   }
   return (is_success);
 }
@@ -117,7 +117,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     if (first_special_symbol->position == -1)
     {
       is_split_complete = true;
-      cmd_list_item->cmd = tmp;
+      cmd_list_item->cmd = my_strcpy(tmp);
     }
     else
     {
