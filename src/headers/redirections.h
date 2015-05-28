@@ -1,5 +1,5 @@
-#ifndef IRONSH_PIPELINE_H
-#define IRONSH_PIPELINE_H
+#ifndef IRONSH_REDIRECTIONS_H
+#define IRONSH_REDIRECTIONS_H
 
 
   ///////////////////////////////////////////////////////
@@ -11,7 +11,7 @@
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
-  t_cmd_list* pipeline(t_cmd_list *cmd, int input);
+  t_cmd_list* redirections(t_cmd_list* cmd);
 
 
 #endif

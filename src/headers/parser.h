@@ -1,17 +1,14 @@
 #ifndef IRONSH_PARSER_H
 #define IRONSH_PARSER_H
 
-  ///////////////////////////////////////////////////////
-  // INCLUDES
-  ///////////////////////////////////////////////////////
-  #include "prompt.h"
 
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
-  int parser(char* commandLine);
-  char** split_cmd(char* commandLine);
-  int* count_char(char* commandLine, int nb_args);
-  void free_array(char** commandSplit);
+  char**  split_cmd(char* commandLine);
+  int     parser(char* commandLine);
+  int*    count_char(char* commandLine, int nb_args);
+  void    free_array(char** commandSplit);
+
 
 #endif

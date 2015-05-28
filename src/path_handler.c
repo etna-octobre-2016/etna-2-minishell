@@ -1,46 +1,27 @@
-#include "headers/path_handler.h"
-#include "../lib/my/src/headers/my.h"
-#include <stdlib.h>
 #include <dirent.h>
+#include <stdlib.h>
+#include "../lib/my/src/headers/my.h"
+#include "headers/path_handler.h"
 
-void path_handler(char** commandSplit)
+void          path_handler_init()
 {
-  t_listFunc tabFunc[] =
-    {
-      {"add_path", add_path},
-      {"del_path", del_path},
-      {"path", show_path},
-      {0,0}
-    };
-  int i;
+  t_path*     entity;
 
-  //MASTER LOOP CALL FUNCTION
-  for (i = 0; tabFunc[i].action != 0; i++)
+  g_init_chain = malloc(sizeof(t_list_chain));
+  entity = malloc(sizeof(t_path));
+  if ((g_init_chain == NULL) || (entity == NULL))
   {
-    if (my_strcmp(commandSplit[0], tabFunc[i].action) == 0)
-	    {
-	       tabFunc[i].ptr(commandSplit[1]);
-	    }
-  }
-}
-
-void path_handler_init()
-{
-  s_path* entity;
-
-  s_initChain = malloc(sizeof(s_listChain));
-  entity  = malloc(sizeof(s_path));
-  if ((s_initChain == NULL) || (entity == NULL))
     exit(1);
+  }
   entity->path = ENV_ARG_PATH;
   entity->next = NULL;
-  s_initChain->first = entity;
+  g_init_chain->first = entity;
 }
 
-int add_path(char* path)
+int         add_path(char* path)
 {
-  s_path* entity;
-  char* char_buffer;
+  char*     char_buffer;
+  t_path*   entity;
 
   if (path == NULL)
   {
@@ -52,35 +33,40 @@ int add_path(char* path)
     my_printf("path: %s already exists\n", path);
     return (-1);
   }
-  if ((char_buffer = cleaner_path(path)) != NULL)
+  char_buffer = cleaner_path(path);
+  if (char_buffer != NULL)
   {
-    entity = malloc(sizeof(s_path));
+    entity = malloc(sizeof(t_path));
     if (entity == NULL)
+    {
       return(-1);
+    }
     entity->path = char_buffer;
-    entity->next = s_initChain->first;
-    s_initChain->first = entity;
+    entity->next = g_init_chain->first;
+    g_init_chain->first = entity;
     my_printf("$PATH Updated with %s.\n", entity->path);
     return (0);
   }
   return (-1);
 }
 
-int del_path(char* path)
+int           del_path(char* path)
 {
-  s_path* entity;
-  s_path* buffEntity;
-  int trigger;
+  char*       cleaned_path;
+  int         trigger;
+  t_path*     buffEntity;
+  t_path*     entity;
 
+  cleaned_path = cleaner_path(path);
   trigger = 0;
-  entity = s_initChain->first;
+  entity = g_init_chain->first;
   while (entity != NULL)
   {
-    if (my_strcmp(entity->path, path) == 0)
+    if (my_strcmp(entity->path, cleaned_path) == 0)
     {
       if (trigger == 0)
       {
-        s_initChain->first = entity->next;
+        g_init_chain->first = entity->next;
         my_printf("%s removed from $PATH.\n", entity->path);
         free(entity);
         return (0);
@@ -90,6 +76,7 @@ int del_path(char* path)
         buffEntity->next = entity->next;
         my_printf("%s removed from $PATH.\n", entity->path);
         free(entity);
+        free(cleaned_path);
         return (0);
       }
     }
@@ -98,59 +85,75 @@ int del_path(char* path)
     entity = entity->next;
   }
   my_printf("%s not found on $PATH.\n", path);
+  free(cleaned_path);
   return (0);
 }
 
-int free_chain_path(s_listChain* list)
+int           free_chain_path(t_list_chain* list)
 {
-  s_path* entity;
+  t_path*     entity;
 
   while (list->first != NULL)
-    {
-      entity = list->first;
-      list->first = entity->next;
-      free(entity);
-    }
+  {
+    entity = list->first;
+    list->first = entity->next;
+    free(entity);
+  }
   free(list);
   return (0);
 }
 
-int show_path()
+int           show_path(char* commandSplit)
 {
-  s_path* entity;
+  t_path*     entity;
 
-  entity = s_initChain->first;
+  if (commandSplit != NULL)
+  {
+    if (my_strcmp(commandSplit, "--help") == 0)
+    {
+      show_path_helper();
+      return (0);
+    }
+  }
+  entity = g_init_chain->first;
   my_printf("$PATH=================\n");
   while (entity != NULL)
-    {
-      my_printf("%s\n", entity->path);
-      entity = entity->next;
-    }
-    my_printf("=====================>\n");
-    return (0);
+  {
+    my_printf("%s\n", entity->path);
+    entity = entity->next;
+  }
+  my_printf("=====================>\n");
+  return (0);
 }
 
-s_path* search_chain(char* valueToSearch)
+int show_path_helper()
 {
-  s_path* searchEntity;
+  my_printf("Utilisation :\nPermet d'ajouter ou de supprimer facilement des chemins dans votre variable d'environnement $PATH.\n-add_path /usr/bin      Permet d'ajouter /usr/bin au $PATH\n-del_path /usr/bin      Permet de supprimer /usr/bin au $PATH\n-path                   Permet d'afficher tous les chemins de votre $PATH\n");
+  return (0);
+}
 
-  searchEntity = s_initChain->first;
+t_path*       search_chain(char* valueToSearch)
+{
+  t_path*     searchEntity;
+
+  searchEntity = g_init_chain->first;
   while (searchEntity != NULL)
+  {
+    if (my_strcmp(searchEntity->path, valueToSearch) == 0)
     {
-      if (my_strcmp(searchEntity->path, valueToSearch) == 0)
-	return (searchEntity);
-      else
-	searchEntity = searchEntity->next;
+      return (searchEntity);
     }
+    searchEntity = searchEntity->next;
+  }
   return (NULL);
 }
 
-char* cleaner_path(char* path_to_clean)
+char*         cleaner_path(char* path_to_clean)
 {
-  int i;
-  int counter;
-  int trigger;
-  char* cleaned_path;
+  char*       cleaned_path;
+  int         counter;
+  int         i;
+  int         trigger;
 
   if (opendir(path_to_clean) != NULL)
   {

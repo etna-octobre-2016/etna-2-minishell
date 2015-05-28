@@ -1,12 +1,3 @@
 #ifndef IRONSH_MAIN_H
 #define IRONSH_MAIN_H
-
-  ///////////////////////////////////////////////////////
-  // INCLUDES
-  ///////////////////////////////////////////////////////
-  #include <stdlib.h>
-  #include "env.h"
-  #include "prompt.h"
-  #include "path_handler.h"
-
 #endif
