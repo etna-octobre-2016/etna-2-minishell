@@ -20,8 +20,8 @@ bool              env_set_var(char *name, char *value)
   }
   if (!is_error)
   {
-    variable->name = name;
-    variable->value = value;
+    variable->name = my_strcpy(name);
+    variable->value = my_strcpy(value);
     variable->next = NULL;
     if (g_env_variable == NULL)
     {

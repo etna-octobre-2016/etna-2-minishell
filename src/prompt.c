@@ -55,11 +55,12 @@ bool              prompt_init()
         cmd_current = cmd_current->next;
       }
     }
-    free(cmd);
     if (parser_ret == BUILTIN_EXIT)
     {
       is_running = false;
     }
+    prompt_cmd_split_free(cmd_list);
+    free(cmd);
   }
   return (is_success);
 }
@@ -116,7 +117,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     if (first_special_symbol->position == -1)
     {
       is_split_complete = true;
-      cmd_list_item->cmd = tmp;
+      cmd_list_item->cmd = my_strcpy(tmp);
     }
     else
     {
@@ -130,6 +131,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     }
     cmd_list = prompt_cmd_list_add_item(cmd_list, cmd_list_item);
     prompt_cmd_set_flags(cmd_list_item, first_special_symbol);
+    free(first_special_symbol);
   }
   return (cmd_list);
 }
@@ -186,6 +188,21 @@ void              prompt_cmd_set_flags(t_cmd_list *cmd, t_symbol_match *symbol)
   cmd->is_piped = symbol->is_pipe;
   cmd->is_redirect_input = symbol->is_redirect_input;
   cmd->is_redirect_output = symbol->is_redirect_output;
+}
+
+void              prompt_cmd_split_free(t_cmd_list* cmd_list)
+{
+  t_cmd_list*     cmd;
+  t_cmd_list*     tmp;
+
+  cmd = cmd_list;
+  while (cmd != NULL)
+  {
+    tmp = cmd;
+    cmd = cmd->next;
+    free(tmp->cmd);
+    free(tmp);
+  }
 }
 
 void              prompt_show()
