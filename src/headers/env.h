@@ -1,20 +1,21 @@
 #ifndef IRONSH_ENV_H
 #define IRONSH_ENV_H
 
+
   ///////////////////////////////////////////////////////
   // INCLUDES
   ///////////////////////////////////////////////////////
   #include <stdbool.h>
-  
+
 
   ///////////////////////////////////////////////////////
   // STRUCTURES
   ///////////////////////////////////////////////////////
-  struct                  s_env_variable
+  struct                    s_env_variable
   {
-    char                  *name;
-    char                  *value;
-    struct s_env_variable *next;
+    char*                   name;
+    char*                   value;
+    struct s_env_variable*  next;
   };
 
 
@@ -27,12 +28,13 @@
   ///////////////////////////////////////////////////////
   // PROTOTYPES
   ///////////////////////////////////////////////////////
-  bool            env_set_var(char *name, char *value);
-  void            env_free_list();
-  void            env_print_var(char *name);
-  void            env_unset_var(char *name);
-  t_env_variable  *env_get_list();
-  t_env_variable  *env_get_var(char *name);
-  char            **env_get_array();
+  bool              env_set_var(char *name, char *value);
+  char**            env_get_array();
+  t_env_variable*   env_get_list();
+  t_env_variable*   env_get_var(char *name);
+  void              env_free_list();
+  void              env_print_var(char *name);
+  void              env_unset_var(char *name);
+
 
 #endif
