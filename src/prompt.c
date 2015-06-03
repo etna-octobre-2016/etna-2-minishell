@@ -122,7 +122,7 @@ t_cmd_list*       prompt_cmd_split(char *cmd)
     {
       is_split_complete = true;
       cmd_list_item->cmd = my_strcpy(tmp);
-      free(tmp);
+      //free(tmp);
     }
     else
     {
